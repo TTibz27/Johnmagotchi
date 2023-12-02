@@ -18,7 +18,7 @@ namespace Johnmagotchi.Screen.MainGame
         SpriteBatch testSprite;
         Texture2D texture;
         Texture2D topBar;
-        TestJohn currentJohn; // TODO- Change to have John interface that matches the abstractJohn
+        IAbstractJohn currentJohn; // TODO- Change to have John interface that matches the abstractJohn
 
         public override void Init()
         {
@@ -27,7 +27,7 @@ namespace Johnmagotchi.Screen.MainGame
             texture = screenManager.contentRef.Load<Texture2D>("sidebarPlaceholder");
             topBar = screenManager.contentRef.Load<Texture2D>("TopBarPlaceholder");
 
-            currentJohn = new TestJohn();
+            currentJohn = new BaseJohn();
             currentJohn.Init(screenManager);
 
         }

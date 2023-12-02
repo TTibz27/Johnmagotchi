@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 
 namespace Johnmagotchi.GameContent.Objects.Johns
 {
-    public class TestJohn : AbtractJohn
+    public class TestJohn : AbstractJohn
     {
         Texture2D headTexture;
         Texture2D bodyTexture;
@@ -32,8 +32,13 @@ namespace Johnmagotchi.GameContent.Objects.Johns
             spriteBatch.End();
         }
         public override void Update() { }   
-        public override void Destroy() { }  
-          
+        public override void Destroy() { }
+
+        public override string GetDisplayName()
+        {
+            return "Test John";
+        }
+
 
     }
 }
