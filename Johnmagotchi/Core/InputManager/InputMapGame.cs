@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 
-namespace TibzGame.Core.InputManager
+namespace TibzGame.Core.Inputs
 {
-    class InputMapGame
+    public class InputMapGame
     {
         public ButtonPress action0;
         public ButtonPress action1;

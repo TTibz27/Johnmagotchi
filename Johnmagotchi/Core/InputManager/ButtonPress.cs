@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TibzGame.Core.InputManager
+namespace TibzGame.Core.Inputs
 {
     public class ButtonPress
     {

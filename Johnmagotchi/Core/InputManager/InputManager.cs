@@ -6,9 +6,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace TibzGame.Core.InputManager
+namespace TibzGame.Core.Inputs
 {
-    class InputManager
+    public class InputManager
     {
         // classes that have actions should just read from these during their update() to get the latest state of all input devices.
         public InputMapMenu menuInputs;

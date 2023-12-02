@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TibzGame.Core.Inputs;
 
 namespace TibzGame.Core.ScreenManager
 {
@@ -13,11 +14,13 @@ namespace TibzGame.Core.ScreenManager
         private Stack<GameScreen> _screens = new Stack<GameScreen>();
         public GraphicsDeviceManager gfxDevRef;
         public ContentManager contentRef;
-        public ScreenManager(Game game, ref GraphicsDeviceManager gfxRef, ref ContentManager contentManagerRef)
+        public InputManager inputs;
+        public ScreenManager(Game game, ref GraphicsDeviceManager gfxRef, ref ContentManager contentManagerRef, ref InputManager inputManager)
             : base(game)
         {
             gfxDevRef = gfxRef;
             contentRef = contentManagerRef;
+            inputs = inputManager;
         
         }
         protected override void LoadContent()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -22,6 +23,15 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         public float spriteRotation;
         public SpriteEffects currentSpriteEffects;
 
+        public int HUNGER_DECAY = 20;
+        public int SLEEP_DECAY = 20;
+        public int BR_DECAY = 20;
+
+        private int hungerTimer;
+        private int sleepTimer;
+        private int brTimer;
+
+
         private int animHopWalkTimer;
         protected int hopwalkDuration = 28; //must be an even number or else it will cause issues 
         protected int hopwalkDelay = 20;
@@ -37,11 +47,20 @@ namespace Johnmagotchi.GameContent.Objects.Johns
             spriteRotation = 0;
             facingLeft = false;
             currentSpriteEffects = SpriteEffects.None;
+
+            hungerTimer = 0;
+            sleepTimer = 0;
+            brTimer = 0;
         }
         public abstract void Init(ScreenManager screenManager);
         public abstract void Draw();
         public abstract void Update();
         public abstract void Destroy();
+
+        // Lower decay number = faster decay, probably not intuitive
+        public virtual int GetHungerDecay() { return 60; }
+        public virtual int GetSleepDecay() { return 60; }
+        public virtual int GetBathroomDecay() { return 60; }
 
         public abstract string GetDisplayName();
 
@@ -84,6 +103,32 @@ namespace Johnmagotchi.GameContent.Objects.Johns
                 facingLeft = false;
                 xPosition = leftBound;
                 currentSpriteEffects = SpriteEffects.None;
+            }
+
+        }
+        public JohnStatus getStatus() {
+
+            return status;
+        }
+
+        public void UpdateStatus() {
+            hungerTimer++;
+            sleepTimer++;
+            brTimer++;
+
+            if (hungerTimer >= GetHungerDecay())
+            {
+                status.hungry--;
+                hungerTimer = 0;
+            }
+            if (sleepTimer >= GetSleepDecay()) 
+            {
+                status.sleepy--;
+                sleepTimer = 0;
+            }
+            if (brTimer >= GetBathroomDecay()) {
+                status.bathroom--;
+                brTimer = 0;
             }
 
         }

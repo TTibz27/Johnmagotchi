@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 
-namespace TibzGame.Core.InputManager
+namespace TibzGame.Core.Inputs
 {
-    class MouseInput
+    public class MouseInput
     {
         public ButtonPress leftClick;
         public ButtonPress rightClick;

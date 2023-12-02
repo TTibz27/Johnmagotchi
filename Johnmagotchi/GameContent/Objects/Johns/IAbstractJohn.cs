@@ -15,6 +15,8 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         public abstract void Destroy();
 
         public abstract string GetDisplayName();
+
+        public abstract JohnStatus getStatus();
     }
     
 }

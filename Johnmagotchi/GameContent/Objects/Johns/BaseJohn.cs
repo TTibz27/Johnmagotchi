@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,8 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         Texture2D headTexture;
         Texture2D bodyTexture;
         Texture2D shadowTexture;
-        
 
+    
         public BaseJohn() : base()
         {
             shadowOffset = height +12 - (width/2);
@@ -30,6 +31,23 @@ namespace Johnmagotchi.GameContent.Objects.Johns
             this.bodyTexture = screenManager.contentRef.Load<Texture2D>("BaseJohnBody");
             this.shadowTexture = screenManager.contentRef.Load<Texture2D>("ShadowRegular");
         }
+
+        /*
+        public override int GetHungerDecay()
+        {
+           return 1;
+        }
+        public override int GetBathroomDecay()
+        {
+           return 30;
+        }
+
+        public override int GetSleepDecay()
+        {
+            return 30;
+        }
+        */
+
         public override void Draw()
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
@@ -56,7 +74,9 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         {
             spriteRotation++;
             animateHopWalk();
-        
+            UpdateStatus();
+
+
         }
         public override void Destroy() { }
 

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TibzGame.Core.InputManager
+namespace TibzGame.Core.Inputs
 {
-    class InputMapMenu
+    public class InputMapMenu
     {
         public ButtonPress confirm;
         public ButtonPress cancel;

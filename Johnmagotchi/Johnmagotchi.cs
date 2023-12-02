@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TibzGame.Core.InputManager;
+using TibzGame.Core.Inputs;
 using TibzGame.Core.ScreenManager;
 
 namespace Johnmagotchi
@@ -13,7 +13,7 @@ namespace Johnmagotchi
         public GraphicsDeviceManager graphics;
         private SpriteBatch _spriteBatch;
         private ScreenManager _screenManager;
-        private InputManager _inputManager;
+        public InputManager inputManager;
         public ContentManager contentRef;
 
         public MainGameScreen gameScrn;
@@ -22,8 +22,9 @@ namespace Johnmagotchi
         {
             contentRef = Content;
             graphics = new GraphicsDeviceManager(this);
-            _screenManager = new ScreenManager(this, ref graphics,  ref contentRef); // pass a ref to gfx for screen size changes
-            _inputManager = new InputManager();
+            inputManager = new InputManager();
+            _screenManager = new ScreenManager(this, ref graphics,  ref contentRef, ref inputManager); // pass a ref to gfx for screen size changes
+           
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
            
@@ -53,7 +54,7 @@ namespace Johnmagotchi
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _inputManager.getInputs();
+            inputManager.getInputs();
 
             // TODO: Add your update logic here
 

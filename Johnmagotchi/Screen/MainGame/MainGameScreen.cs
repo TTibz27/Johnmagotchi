@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using TibzGame.Core.Inputs;
 using TibzGame.Core.ScreenManager;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -16,27 +17,42 @@ namespace Johnmagotchi.Screen.MainGame
 {
     public class MainGameScreen : GameScreen
     {
-        SpriteBatch testSprite;
+        SpriteBatch spriteBatch;
         Texture2D leftBar;
         Texture2D topBar;
+        Texture2D topBarButton;
+        Texture2D topBarButtohHighlighted;
+        Texture2D statusBarFull;
+        Texture2D statusBarEmpty;
 
 
         SpriteFont karmatic;
         SpriteFont kemco;
-        SpriteFont phone;
         SpriteFont pixsplit;
         SpriteFont ariel;
 
-        private static bool DEBUG_FONT_PRINT = true;
+        private int mouseHoverIndex;
+
+        private int displayNameOffset;
+
+        private static bool DEBUG_FONT_PRINT = false;
 
         IAbstractJohn currentJohn; 
 
         public override void Init()
         {
-            testSprite = new SpriteBatch(screenManager.GraphicsDevice);
+            spriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
 
-            leftBar = screenManager.contentRef.Load<Texture2D>("sidebarPlaceholder");
+            //UI
+            leftBar = screenManager.contentRef.Load<Texture2D>("UI/sidebar2");
             topBar = screenManager.contentRef.Load<Texture2D>("TopBarPlaceholder");
+            topBarButton = screenManager.contentRef.Load<Texture2D>("UI/SingleButtonBG");
+            topBarButtohHighlighted = screenManager.contentRef.Load<Texture2D>("UI/SingleButtonBGBright");
+            statusBarFull = screenManager.contentRef.Load<Texture2D>("UI/HealthBarGreen");
+            statusBarEmpty = screenManager.contentRef.Load<Texture2D>("UI/HealthBarRed");
+            mouseHoverIndex = -1;
+
+            //fonts
             karmatic = screenManager.contentRef.Load<SpriteFont>("Fonts/Karmatic-20");
             kemco = screenManager.contentRef.Load<SpriteFont>("Fonts/Kemco-20");
             pixsplit = screenManager.contentRef.Load<SpriteFont>("Fonts/PixelSplitter");
@@ -45,40 +61,85 @@ namespace Johnmagotchi.Screen.MainGame
             currentJohn = new BaseJohn();
             currentJohn.Init(screenManager);
 
+            displayNameOffset =(int) (karmatic.MeasureString(currentJohn.GetDisplayName()).X /2); // TODO -- add logic for multiple line length names. also this font should prly be changed, it doesn't read too well on backgrounds that have color.
+
         }
         public override void Draw()
         {
+
+            //John playfield
+            currentJohn.Draw();
+
+
             // Background
-            testSprite.Begin();
-            testSprite.Draw(leftBar, new Vector2(0, 0), Color.White);
-            testSprite.Draw(topBar, new Vector2(350, 0), Color.White);
+
+            //Side & Top Bars
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+            spriteBatch.Draw(leftBar, new Vector2(0, 0), Color.White);
+
+            spriteBatch.Draw(topBar, new Vector2(350, 0), Color.White); ///185 width
+
+            spriteBatch.Draw(topBarButton, new Vector2(350, 0), Color.White);
+            spriteBatch.Draw(topBarButton, new Vector2(350 +186, 0), Color.White);
+            spriteBatch.Draw(topBarButton, new Vector2(350 + 186 * 2,0), Color.White);
+            spriteBatch.Draw(topBarButton, new Vector2(350 + 186 * 3, 0), Color.White);
+            spriteBatch.Draw(topBarButton, new Vector2(350 + 186 * 4, 0), Color.White);
+
+            //highlight if appropriate
+            if (mouseHoverIndex == 0) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350, 0), Color.White);
+            if (mouseHoverIndex == 1) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 +186, 0), Color.White);
+            if (mouseHoverIndex == 2) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 2, 0), Color.White);
+            if (mouseHoverIndex == 3) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 3, 0), Color.White);
+            if (mouseHoverIndex == 4) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 4, 0), Color.White);
+
             Debug.WriteLine("draw");
 
+            //Print John Name
+            Vector2 textRotationOrigin = new Vector2(50, 25); // karmatic.MeasureString(text) / 2;
+                                                           // Places text in center of the screen
+            Vector2 position = new(200 - displayNameOffset, 75);
+            spriteBatch.DrawString(karmatic, currentJohn.GetDisplayName(), position, Color.Black, 0, textRotationOrigin, 2.0f, SpriteEffects.None, 0.5f);
 
-            // Text 
+            //Status Bars
+
+            spriteBatch.DrawString(kemco, "Hunger", new Vector2(85, 200), Color.Black, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.Draw(statusBarEmpty, new Vector2(35, 200), Color.White);
+            spriteBatch.Draw(statusBarFull, new Vector2(35, 200), new Rectangle(0,0,currentJohn.getStatus().hungry,30) ,Color.White);
+
+            spriteBatch.DrawString(kemco, "Sleep", new Vector2(85, 300), Color.Black, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.Draw(statusBarEmpty, new Vector2(35, 300), Color.White);
+            spriteBatch.Draw(statusBarFull, new Vector2(35, 300), new Rectangle(0, 0, currentJohn.getStatus().sleepy, 30), Color.White);
+
+            spriteBatch.DrawString(kemco, "Bathroom", new Vector2(85, 400), Color.Black, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.Draw(statusBarEmpty, new Vector2(35, 400), Color.White);
+            spriteBatch.Draw(statusBarFull, new Vector2(35, 400), new Rectangle(0, 0, currentJohn.getStatus().bathroom, 30), Color.White);
+
+            spriteBatch.DrawString(kemco, "JPM:", new Vector2(85, 500), Color.Black, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(kemco, "(Johns Per Minute)", new Vector2(80, 520), Color.Black, 0, textRotationOrigin, 0.75f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(pixsplit, currentJohn.getStatus().JPM.ToString(), new Vector2(95, 560), Color.Black, 0, textRotationOrigin,1.0f, SpriteEffects.None, 0.5f);
+
+            // DebugText 
 
             if (DEBUG_FONT_PRINT)
             {
 
                 // Finds the center of the string in coordinates inside the text rectangle
-                Vector2 textMiddlePoint = new Vector2(50,25); // karmatic.MeasureString(text) / 2;
+                 textRotationOrigin = new Vector2(50,25); // karmatic.MeasureString(text) / 2;
                 // Places text in center of the screen
-                Vector2 position = new Vector2(1080 / 2, 720 / 2);
-                testSprite.DrawString(karmatic, "Karmatic", position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+                 position = new Vector2(1080 / 2, 720 / 2);
+                spriteBatch.DrawString(karmatic, "Karmatic", position, Color.White, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
                 position.Y += 50;
-                testSprite.DrawString(kemco, "Kemco", position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(kemco, "Kemco", position, Color.White, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
                 position.Y += 50;
-                testSprite.DrawString(pixsplit, "Pixel Splitter", position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(pixsplit, "Pixel Splitter", position, Color.White, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
                 position.Y += 50;
-                testSprite.DrawString(ariel, "Ariel", position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(ariel, "Ariel", position, Color.White, 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
                 position.Y += 50;
 
             }
 
-            testSprite.End();
+            spriteBatch.End();
 
-            //John playfield
-            currentJohn.Draw();
 
 
         }
@@ -86,6 +147,16 @@ namespace Johnmagotchi.Screen.MainGame
         {
             //throw new NotImplementedException();
             currentJohn.Update();
+
+            if (screenManager.inputs.mouseInput.y <= 50) { 
+                if (screenManager.inputs.mouseInput.x >= 350)
+                {
+                    mouseHoverIndex = (int) Math.Floor( (screenManager.inputs.mouseInput.x - 350) / 186.0f);
+                }
+                else mouseHoverIndex = -1;
+            }
+            else { mouseHoverIndex = -1; }
+            
         }
         public override void Destroy()
         {
