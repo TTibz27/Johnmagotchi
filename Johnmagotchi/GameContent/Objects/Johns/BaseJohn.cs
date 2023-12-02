@@ -31,7 +31,7 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         }
         public override void Draw()
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
             Rectangle shadowRect = new Rectangle(xPosition,yPosition + height, width, width/2);
             Rectangle bodyRect = new Rectangle(xPosition, yPosition + width, width, width);
             Rectangle headRect = new Rectangle(xPosition, yPosition, width, width);
