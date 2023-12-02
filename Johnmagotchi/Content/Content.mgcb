@@ -37,6 +37,34 @@
 /processorParam:TextureFormat=Color
 /build:BaseJohnHead.png
 
+#begin Fonts/ariel-20.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/ariel-20.spritefont
+
+#begin Fonts/Karmatic-20.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Karmatic-20.spritefont
+
+#begin Fonts/Kemco-20.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Kemco-20.spritefont
+
+#begin Fonts/PixelSplitter.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/PixelSplitter.spritefont
+
 #begin John-body-placeholder.png
 /importer:TextureImporter
 /processor:TextureProcessor

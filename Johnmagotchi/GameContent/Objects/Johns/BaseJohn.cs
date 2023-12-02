@@ -15,10 +15,11 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         Texture2D headTexture;
         Texture2D bodyTexture;
         Texture2D shadowTexture;
+        
 
         public BaseJohn() : base()
         {
-            height = height +12 - (width/2);
+            shadowOffset = height +12 - (width/2);
 
         }
 
@@ -32,20 +33,36 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         public override void Draw()
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
-            Rectangle shadowRect = new Rectangle(xPosition,yPosition + height, width, width/2);
+            Rectangle shadowRect = new Rectangle(xPosition,yPosition + shadowOffset, width, width/2);
             Rectangle bodyRect = new Rectangle(xPosition, yPosition + width, width, width);
             Rectangle headRect = new Rectangle(xPosition, yPosition, width, width);
-            spriteBatch.Draw(shadowTexture,shadowRect, Color.White);
-            spriteBatch.Draw(bodyTexture, bodyRect, Color.White);
-            spriteBatch.Draw(headTexture, headRect, Color.White);
+
+
+
+
+            spriteBatch.Draw(shadowTexture, shadowRect, Color.White);
+            spriteBatch.Draw(
+                bodyTexture, bodyRect, null, Color.White, 0, new Vector2(0,0), 
+                currentSpriteEffects,1);
+            spriteBatch.Draw(
+               headTexture, headRect, null, Color.White, 0, new Vector2(0, 0),
+               currentSpriteEffects, 1);
+
+           // spriteBatch.Draw(bodyTexture, bodyRect, Color.White);
+           // spriteBatch.Draw(headTexture, headRect, Color.White);
             spriteBatch.End();
         }
-        public override void Update() { }
+        public override void Update() 
+        {
+            spriteRotation++;
+            animateHopWalk();
+        
+        }
         public override void Destroy() { }
 
         public override string GetDisplayName()
         {
-            return "Test John";
+            return "John";
         }
 
 
