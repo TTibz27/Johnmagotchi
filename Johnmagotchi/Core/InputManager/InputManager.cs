@@ -64,17 +64,6 @@ namespace TibzGame.Core.Inputs
 
            // Debug.WriteLine("MOUSE X: "+ mouseInput.x + "  MOUSE Y: " + mouseInput.y);
 
-
-            if (mouseInput.leftClick.isJustPressed)
-            {
-                Debug.WriteLine("MOUSE Just clicked ");
-            }
-
-            if (mouseInput.leftClick.isPressed)
-            {
-                Debug.WriteLine("MOUSE held " + mouseInput.leftClick.heldTime);
-            }
-
         }
     }
 }

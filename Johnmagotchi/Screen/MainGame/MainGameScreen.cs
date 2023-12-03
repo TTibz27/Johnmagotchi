@@ -92,10 +92,17 @@ namespace Johnmagotchi.Screen.MainGame
             if (mouseHoverIndex == 3) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 3, 0), Color.White);
             if (mouseHoverIndex == 4) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 4, 0), Color.White);
 
-            Debug.WriteLine("draw");
+            Vector2 textRotationOrigin = new Vector2(50, 25);
+            // labels
+            spriteBatch.DrawString(kemco, "Food", new Vector2(450, 40),  new Color( new Vector3(255,255,255)), 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(kemco, "Sleep", new Vector2(450 +186, 40), new Color(new Vector3(255, 255, 255)), 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(kemco, "John", new Vector2(450 + 186 *2, 40), new Color(new Vector3(255, 255, 255)), 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(kemco, "Games", new Vector2(450 + 186 * 3, 40), new Color(new Vector3(255, 255, 255)), 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(kemco, "Data", new Vector2(450 + 186 * 4, 40), new Color(new Vector3(255, 255, 255)), 0, textRotationOrigin, 1.0f, SpriteEffects.None, 0.5f);
+
 
             //Print John Name
-            Vector2 textRotationOrigin = new Vector2(50, 25); // karmatic.MeasureString(text) / 2;
+         //   Vector2 textRotationOrigin = new Vector2(50, 25); // karmatic.MeasureString(text) / 2;
                                                            // Places text in center of the screen
             Vector2 position = new(200 - displayNameOffset, 75);
             spriteBatch.DrawString(karmatic, currentJohn.GetDisplayName(), position, Color.Black, 0, textRotationOrigin, 2.0f, SpriteEffects.None, 0.5f);
@@ -148,16 +155,47 @@ namespace Johnmagotchi.Screen.MainGame
             //throw new NotImplementedException();
             currentJohn.Update();
 
-            if (screenManager.inputs.mouseInput.y <= 50) { 
-                if (screenManager.inputs.mouseInput.x >= 350)
+            if (this.isTopScreen)
+            {
+                if (screenManager.inputs.mouseInput.y <= 50)
                 {
-                    mouseHoverIndex = (int) Math.Floor( (screenManager.inputs.mouseInput.x - 350) / 186.0f);
+                    if (screenManager.inputs.mouseInput.x >= 350)
+                    {
+                        mouseHoverIndex = (int)Math.Floor((screenManager.inputs.mouseInput.x - 350) / 186.0f);
+                    }
+                    else mouseHoverIndex = -1;
                 }
-                else mouseHoverIndex = -1;
+                else { mouseHoverIndex = -1; }
+
+
+                if (screenManager.inputs.mouseInput.leftClick.isJustPressed && mouseHoverIndex >= 0)
+                {
+                    Debug.WriteLine("click registered");
+                    switch (mouseHoverIndex)
+                    {
+                        case 0:
+                            Debug.WriteLine("Food");
+                            break;
+                        case 1:
+                            Debug.WriteLine("Sleep");
+                            break;
+                        case 2:
+                            Debug.WriteLine("John");
+                            break;
+                        case 3:
+                            Debug.WriteLine("Games");
+                            break;
+                        case 4:
+                            Debug.WriteLine("Data");
+                            break;
+                        default:
+                            Debug.WriteLine("Unhandled index clicked");
+                            break;
+                    }
+                }
             }
-            else { mouseHoverIndex = -1; }
-            
         }
+
         public override void Destroy()
         {
             throw new NotImplementedException();

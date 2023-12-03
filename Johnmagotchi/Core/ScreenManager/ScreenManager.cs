@@ -35,10 +35,13 @@ namespace TibzGame.Core.ScreenManager
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+           
             foreach (GameScreen screen in _screens)
             {
                 screen.Update();
+                screen.isTopScreen = false;
             }
+            _screens.Peek().isTopScreen = true;
         }
 
         public override void Draw(GameTime gameTime)

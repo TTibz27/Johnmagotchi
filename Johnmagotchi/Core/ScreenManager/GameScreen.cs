@@ -16,10 +16,11 @@ namespace TibzGame.Core.ScreenManager
 
         public bool isUpdatePriority; // Blocks updates lower than this in the stack
         public bool isDrawPriority; // Blocks draws lower than this in the stack
+        public bool isTopScreen; // only topmost screen should accept inputs
 
         public ScreenManager ScreenManager
         {
-            get { return screenManager; }
+            get { return screenManager; }  
             internal set { screenManager = value; }
         }
 
