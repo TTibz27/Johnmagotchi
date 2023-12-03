@@ -119,15 +119,18 @@ namespace Johnmagotchi.GameContent.Objects.Johns
             if (hungerTimer >= GetHungerDecay())
             {
                 status.hungry--;
+                if (status.hungry < 0) { status.hungry = 0;}
                 hungerTimer = 0;
             }
             if (sleepTimer >= GetSleepDecay()) 
             {
+                if (status.sleepy < 0) { status.sleepy = 0; }
                 status.sleepy--;
                 sleepTimer = 0;
             }
             if (brTimer >= GetBathroomDecay()) {
                 status.bathroom--;
+                if (status.bathroom < 0) { status.bathroom = 0;} 
                 brTimer = 0;
             }
 
