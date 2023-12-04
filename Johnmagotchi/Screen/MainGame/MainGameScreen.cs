@@ -37,7 +37,7 @@ namespace Johnmagotchi.Screen.MainGame
 
         private static bool DEBUG_FONT_PRINT = false;
 
-        IAbstractJohn currentJohn; 
+        IAbstractJohn currentJohn;
 
         public override void Init()
         {
@@ -175,6 +175,7 @@ namespace Johnmagotchi.Screen.MainGame
                     {
                         case 0:
                             Debug.WriteLine("Food");
+                            screenManager.addScreen(new FoodScreen(this));
                             break;
                         case 1:
                             Debug.WriteLine("Sleep");
@@ -199,6 +200,11 @@ namespace Johnmagotchi.Screen.MainGame
         public override void Destroy()
         {
             throw new NotImplementedException();
+        }
+
+        public void spawnFood(int FoodType) { 
+        
+        
         }
     }
 }
