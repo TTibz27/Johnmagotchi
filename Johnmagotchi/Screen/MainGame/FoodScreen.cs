@@ -23,11 +23,23 @@ namespace Johnmagotchi.Screen.MainGame
         SpriteFont kemco;
 
 
+        Texture2D BurgerTexture;
+        Texture2D SalmonTexture;
+        Texture2D TacosTexture;
+        Texture2D PopcornTexture;
+        Texture2D PizzaTexture;
+        Texture2D CerealTexture;
+        Texture2D SaladTexture;
+        Texture2D CakeTexture;
+
+        // These could all be consts
         int spriteScaler;
         int panelWidth;
         int panelHeight;
         int buttonWidth;
         int buttonHeight;
+        int foodWidth;
+        int foodHeight;
         int highlightedButtonIndex;
 
         public FoodScreen(MainGameScreen mainScreenRef) {
@@ -37,6 +49,8 @@ namespace Johnmagotchi.Screen.MainGame
             panelHeight = 160 * spriteScaler;
             buttonWidth = 60 * spriteScaler;
             buttonHeight = 60 * spriteScaler;
+            foodWidth = 50 * spriteScaler;
+            foodHeight = 38 * spriteScaler;
 
             highlightedButtonIndex = -1;
         }
@@ -49,6 +63,16 @@ namespace Johnmagotchi.Screen.MainGame
             button = screenManager.contentRef.Load<Texture2D>("UI/FoodButton");
             buttonHighlight = screenManager.contentRef.Load<Texture2D>("UI/FoodButtonHighlighted");
             kemco = screenManager.contentRef.Load<SpriteFont>("Fonts/Kemco-20");
+
+            BurgerTexture =  screenManager.contentRef.Load<Texture2D>("Foods/Burger");
+            SalmonTexture = screenManager.contentRef.Load<Texture2D>("Foods/salmon.");
+            TacosTexture = screenManager.contentRef.Load<Texture2D>("Foods/tacos");
+            PopcornTexture = screenManager.contentRef.Load<Texture2D>("Foods/popcorn");
+            PizzaTexture = screenManager.contentRef.Load<Texture2D>("Foods/Pizza");
+            CerealTexture = screenManager.contentRef.Load<Texture2D>("Foods/cereal");
+            SaladTexture = screenManager.contentRef.Load<Texture2D>("Foods/salad");
+            CakeTexture = screenManager.contentRef.Load<Texture2D>("Foods/cake");
+
         }
 
         public override void Draw()
@@ -116,8 +140,29 @@ namespace Johnmagotchi.Screen.MainGame
             spriteBatch.DrawString(kemco, "Salad", label6, Color.Black);
             spriteBatch.DrawString(kemco, "Cake", label7, Color.Black);
 
+            // food sprites
+            xPos = 300 + 9 + 10 * spriteScaler;
+            Rectangle foodRect0 = new(xPos, 21 * spriteScaler, foodWidth, foodHeight);
+            Rectangle foodRect4 = new(xPos, 81 * spriteScaler, foodWidth, foodHeight);
+            xPos += 60 * spriteScaler;
+            Rectangle foodRect1 = new(xPos, 21 * spriteScaler, foodWidth, foodHeight);
+            Rectangle foodRect5 = new(xPos, 81 * spriteScaler, foodWidth, foodHeight);
+            xPos += 60 * spriteScaler;
+            Rectangle foodRect2 = new(xPos, 21 * spriteScaler, foodWidth, foodHeight);
+            Rectangle foodRect6 = new(xPos, 81 * spriteScaler, foodWidth, foodHeight);
+            xPos += 60 * spriteScaler;
+            Rectangle foodRect3 = new(xPos, 21 * spriteScaler, foodWidth, foodHeight);
+            Rectangle foodRect7 = new(xPos, 81 * spriteScaler, foodWidth, foodHeight);
 
-
+            // draw foods
+            spriteBatch.Draw(BurgerTexture, foodRect0, Color.White);
+            spriteBatch.Draw(SalmonTexture, foodRect1, Color.White);
+            spriteBatch.Draw(TacosTexture, foodRect2, Color.White);
+            spriteBatch.Draw(PopcornTexture, foodRect3, Color.White);
+            spriteBatch.Draw(PizzaTexture, foodRect4, Color.White);
+            spriteBatch.Draw(CerealTexture, foodRect5, Color.White);
+            spriteBatch.Draw(SaladTexture, foodRect6, Color.White);
+            spriteBatch.Draw(CakeTexture, foodRect7, Color.White);
 
 
 

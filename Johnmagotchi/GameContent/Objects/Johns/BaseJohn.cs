@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,9 +73,23 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         }
         public override void Update() 
         {
-            spriteRotation++;
-            animateHopWalk();
             UpdateStatus();
+            if (johnState == JohnState.Walking)
+            {
+                animateHopWalk();
+             
+            }
+            else if (johnState == JohnState.MoveTo) {
+                Debug.WriteLine("MoveTo");
+                if (moveTo(MoveToXPosition)) {
+                    johnState = JohnState.Waiting;
+                }
+            }
+
+            if (johnState == JohnState.Waiting) {
+                Debug.WriteLine("waiting");
+            }
+
 
 
         }
@@ -86,5 +101,6 @@ namespace Johnmagotchi.GameContent.Objects.Johns
         }
 
 
+ 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Johnmagotchi.GameContent.Objects.Johns;
+﻿using Johnmagotchi.GameContent.Objects.Food;
+using Johnmagotchi.GameContent.Objects.Johns;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TibzGame.Core.Inputs;
 using TibzGame.Core.ScreenManager;
+using static Johnmagotchi.GameContent.Objects.Johns.AbstractJohn;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Johnmagotchi.Screen.MainGame
@@ -37,7 +39,13 @@ namespace Johnmagotchi.Screen.MainGame
 
         private static bool DEBUG_FONT_PRINT = false;
 
+        int playbackSpeedModifier;
+
+
+        private FoodObj food;
+
         IAbstractJohn currentJohn;
+
 
         public override void Init()
         {
@@ -60,18 +68,28 @@ namespace Johnmagotchi.Screen.MainGame
 
             currentJohn = new BaseJohn();
             currentJohn.Init(screenManager);
+            playbackSpeedModifier = 4;
+
+            food = null;
+
+            /*   isFoodObjectReady= false;
+               isFoodObjectSpawned= false; */
 
             displayNameOffset =(int) (karmatic.MeasureString(currentJohn.GetDisplayName()).X /2); // TODO -- add logic for multiple line length names. also this font should prly be changed, it doesn't read too well on backgrounds that have color.
-
+          
         }
         public override void Draw()
         {
 
             //John playfield
             currentJohn.Draw();
+            if (food!= null) food.Draw();
 
 
             // Background
+
+
+
 
             //Side & Top Bars
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
@@ -86,11 +104,14 @@ namespace Johnmagotchi.Screen.MainGame
             spriteBatch.Draw(topBarButton, new Vector2(350 + 186 * 4, 0), Color.White);
 
             //highlight if appropriate
-            if (mouseHoverIndex == 0) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350, 0), Color.White);
-            if (mouseHoverIndex == 1) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 +186, 0), Color.White);
-            if (mouseHoverIndex == 2) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 2, 0), Color.White);
-            if (mouseHoverIndex == 3) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 3, 0), Color.White);
-            if (mouseHoverIndex == 4) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 4, 0), Color.White);
+            if (currentJohn.GetJohnState() == JohnState.Walking && food ==null) // don't imply selections can be made if john is busy
+            {
+                if (mouseHoverIndex == 0) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350, 0), Color.White);
+                if (mouseHoverIndex == 1) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186, 0), Color.White);
+                if (mouseHoverIndex == 2) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 2, 0), Color.White);
+                if (mouseHoverIndex == 3) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 3, 0), Color.White);
+                if (mouseHoverIndex == 4) spriteBatch.Draw(topBarButtohHighlighted, new Vector2(350 + 186 * 4, 0), Color.White);
+            }
 
             Vector2 textRotationOrigin = new Vector2(50, 25);
             // labels
@@ -153,7 +174,11 @@ namespace Johnmagotchi.Screen.MainGame
         public override void Update()
         {
             //throw new NotImplementedException();
-            currentJohn.Update();
+            for (int i = 0; i < playbackSpeedModifier; i++)
+            {
+                currentJohn.Update();
+            }
+       
 
             if (this.isTopScreen)
             {
@@ -171,27 +196,65 @@ namespace Johnmagotchi.Screen.MainGame
                 if (screenManager.inputs.mouseInput.leftClick.isJustPressed && mouseHoverIndex >= 0)
                 {
                     Debug.WriteLine("click registered");
-                    switch (mouseHoverIndex)
+                    if (currentJohn.GetJohnState() == JohnState.Walking && food == null) // lock out screen transitions if currentJohn is busy or food is null
                     {
-                        case 0:
-                            Debug.WriteLine("Food");
-                            screenManager.addScreen(new FoodScreen(this));
-                            break;
-                        case 1:
-                            Debug.WriteLine("Sleep");
-                            break;
-                        case 2:
-                            Debug.WriteLine("John");
-                            break;
-                        case 3:
-                            Debug.WriteLine("Games");
-                            break;
-                        case 4:
-                            Debug.WriteLine("Data");
-                            break;
-                        default:
-                            Debug.WriteLine("Unhandled index clicked");
-                            break;
+                        switch (mouseHoverIndex)
+                        {
+                            case 0:
+                                Debug.WriteLine("Food");
+
+                                screenManager.addScreen(new FoodScreen(this));
+
+                                break;
+                            case 1:
+                                Debug.WriteLine("Sleep");
+                                break;
+                            case 2:
+                                Debug.WriteLine("John");
+                                break;
+                            case 3:
+                                Debug.WriteLine("Games");
+                                break;
+                            case 4:
+                                Debug.WriteLine("Data");
+                                break;
+                            default:
+                                Debug.WriteLine("Unhandled index clicked");
+                                break;
+                        }
+                    }
+                }
+            }
+
+            if (food != null) {
+                          
+                //will cause food to fall and then execute inside when food hits ground
+                if (food.updateFalling())
+                {
+                    if (currentJohn.GetJohnState() == JohnState.Walking) {
+                        currentJohn.SetMoveTo(food.xPos + (25 * 3));
+                        currentJohn.SetJohnState(JohnState.MoveTo);
+                    }
+                      
+
+                    if (currentJohn.GetJohnState() == JohnState.Waiting) // should only happen after moveto completes... we'll see I guess 
+                    {
+                        Debug.WriteLine("waiting");
+                        currentJohn.SetJohnState(JohnState.Eating);
+                        food.isInteractable = false;
+                        Vector2 holdPos = currentJohn.getHoldingPosition();
+
+                        food.xPos = (int)holdPos.X;
+                        food.yPos = (int)holdPos.Y;
+                    }
+                }
+                if (currentJohn.GetJohnState() == JohnState.Eating)
+                {
+                    Debug.WriteLine("eating");
+                    if (food.UpdateEaten())
+                    {
+                        food = null;
+                        currentJohn.SetJohnState(JohnState.Walking);
                     }
                 }
             }
@@ -202,9 +265,12 @@ namespace Johnmagotchi.Screen.MainGame
             throw new NotImplementedException();
         }
 
-        public void spawnFood(int FoodType) { 
-        
-        
+        public void spawnFood(int FoodType) {
+            // this.currentJohn.SetJohnState(JohnState.MoveTo);
+            food = new FoodObj(screenManager, FoodType);
+
+
+
         }
     }
 }
