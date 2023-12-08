@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Johnmagotchi.GameContent;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,7 @@ namespace TibzGame.Core.ScreenManager
         public InputManager inputs;
         public GameScreen[] newScreenBuffer;
         public int removeScreenCount;
+        public GlobalData gameData;
         public ScreenManager(Game game, ref GraphicsDeviceManager gfxRef, ref ContentManager contentManagerRef, ref InputManager inputManager)
             : base(game)
         {
@@ -27,7 +29,9 @@ namespace TibzGame.Core.ScreenManager
 
             newScreenBuffer = new GameScreen[0];
             removeScreenCount = 0;
-        
+            gameData  = new GlobalData(this);// todo = this would be where we load in existing save game data
+
+
         }
         protected override void LoadContent()
         {

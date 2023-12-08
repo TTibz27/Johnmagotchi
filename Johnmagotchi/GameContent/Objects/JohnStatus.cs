@@ -11,14 +11,16 @@ namespace Johnmagotchi.GameContent.Objects
         public int sleepy;
         public int hungry;
         public int bathroom;
-        public int JPM;
+        public int baseJPM;
+        public float currentJPM;
 
         public JohnStatus() 
         { 
             sleepy = 200;
             hungry = 200;
             bathroom = 200;
-            JPM = 5000;
+            baseJPM = 1000;
+            currentJPM = 1000;
         }
 
         public void UpdateStats ()
@@ -27,6 +29,7 @@ namespace Johnmagotchi.GameContent.Objects
             hungry--;
             bathroom--;
 
+      
         }
 
     }
