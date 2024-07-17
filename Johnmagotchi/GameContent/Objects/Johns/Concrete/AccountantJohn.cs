@@ -16,7 +16,7 @@ namespace Johnmagotchi.GameContent.Objects.Johns.Concrete
     {
 
         Texture2D headTexture;
-        Texture2D bodyTexture;
+       // Texture2D bodyTexture;
         Texture2D shadowTexture;
 
 
@@ -24,14 +24,15 @@ namespace Johnmagotchi.GameContent.Objects.Johns.Concrete
         {
             shadowOffset = height + 12 - width / 2;
             baseJPM = 1500;
+            this.status.baseJPM = baseJPM;
 
-    }
+        }
 
         public override void Init(ScreenManager screenManager)
         {
             spriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
-            headTexture = screenManager.contentRef.Load<Texture2D>("BaseJohnHead");
-            bodyTexture = screenManager.contentRef.Load<Texture2D>("BaseJohnBody");
+            headTexture = screenManager.contentRef.Load<Texture2D>("Johns/accountantJohn");
+           // bodyTexture = screenManager.contentRef.Load<Texture2D>("BaseJohnBody");
             shadowTexture = screenManager.contentRef.Load<Texture2D>("ShadowRegular");
             gameData = screenManager.gameData;
         }
@@ -41,16 +42,9 @@ namespace Johnmagotchi.GameContent.Objects.Johns.Concrete
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
             Rectangle shadowRect = new Rectangle(xPosition, yPosition + shadowOffset, width, width / 2);
-            Rectangle bodyRect = new Rectangle(xPosition, yPosition + width, width, width);
-            Rectangle headRect = new Rectangle(xPosition, yPosition, width, width);
-
-
-
+            Rectangle headRect = new Rectangle(xPosition, yPosition, width, height);
 
             spriteBatch.Draw(shadowTexture, shadowRect, Color.White);
-            spriteBatch.Draw(
-                bodyTexture, bodyRect, null, Color.White, 0, new Vector2(0, 0),
-                currentSpriteEffects, 1);
             spriteBatch.Draw(
                headTexture, headRect, null, Color.White, 0, new Vector2(0, 0),
                currentSpriteEffects, 1);
@@ -64,12 +58,8 @@ namespace Johnmagotchi.GameContent.Objects.Johns.Concrete
             int x = (int)pos.X;
             int y = (int)pos.Y;
 
-            Rectangle bodyRect = new Rectangle(x, y + width, width, width);
-            Rectangle headRect = new Rectangle(x, y, width, width);
+            Rectangle headRect = new Rectangle(x, y, width, height);
 
-            spriteBatch.Draw(
-                bodyTexture, bodyRect, null, Color.White, 0, new Vector2(0, 0),
-                currentSpriteEffects, 1);
             spriteBatch.Draw(
                headTexture, headRect, null, Color.White, 0, new Vector2(0, 0),
                currentSpriteEffects, 1);

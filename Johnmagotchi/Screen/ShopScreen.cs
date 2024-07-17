@@ -144,6 +144,8 @@ namespace Johnmagotchi.Screen
                 {
                     Debug.WriteLine("slot 1");
                     screenManager.gameData.PurchaseJohn(john1);
+                    selectedJohn = john1;
+                    slotSelected = 1;
                 }
             }
             if (isMouseButton2 && !slot2Purchased)
@@ -152,6 +154,8 @@ namespace Johnmagotchi.Screen
                 {
                     Debug.WriteLine("slot 2");
                     screenManager.gameData.PurchaseJohn(john2);
+                    selectedJohn = john2;
+                    slotSelected = 2;
                 }
             }
             if (isMouseButton3 && !slot3Purchased)
@@ -160,6 +164,8 @@ namespace Johnmagotchi.Screen
                 {
                     Debug.WriteLine("slot3");
                     screenManager.gameData.PurchaseJohn(john3);
+                    selectedJohn = john3;
+                    slotSelected = 3;
                 }
             }
              // Reassign selected slot
