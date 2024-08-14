@@ -31,7 +31,7 @@ namespace Johnmagotchi.Screen
                 screenManager.inputs.mouseInput.x < 720 &&
                 screenManager.inputs.mouseInput.leftClick.isJustPressed)
             {
-                screenManager.addScreen(new MainGameScreen());
+                // screenManager.addScreen(new MainGameScreen());
             }
         }
 

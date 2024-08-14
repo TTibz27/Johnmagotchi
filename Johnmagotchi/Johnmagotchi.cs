@@ -1,4 +1,5 @@
 ﻿using Johnmagotchi.Screen.MainGame;
+using Johnmagotchi.Screen.MapEditor;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +17,7 @@ namespace Johnmagotchi
         public InputManager inputManager;
         public ContentManager contentRef;
 
-        public MainGameScreen gameScrn;
+        public MapEditorScreen gameScrn;
 
         public Johnmagotchi()
         {
@@ -37,7 +38,7 @@ namespace Johnmagotchi
             base.Initialize();
             Components.Add(_screenManager);
             _screenManager.setWindowSize(1280, 720);
-            gameScrn = new MainGameScreen();
+            gameScrn = new MapEditorScreen();
             _screenManager.addScreen(gameScrn);
           
         }
