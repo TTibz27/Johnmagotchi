@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Text;
 using Johnmagotchi.GameContent;
 using Microsoft.Xna.Framework;
@@ -137,6 +138,28 @@ namespace TibzGame.Core.ScreenManager
 
             System.Console.WriteLine("New resolution: {0} x {1}", gfxDevRef.PreferredBackBufferWidth, gfxDevRef.PreferredBackBufferHeight);
 
+        }
+
+        // 360 x 640 res
+        public double GetScreenScaleX(){
+            return  gfxDevRef.PreferredBackBufferWidth / 640.0;
+        }
+
+        public double GetScreenScaleY(){
+            return gfxDevRef.PreferredBackBufferHeight/  360.00 ;
+        }
+
+        public Rectangle GetScaledRectangle(int posX, int posY, int width, int height){
+
+                double scaleX = gfxDevRef.PreferredBackBufferWidth / 640.0;
+                double scaleY = gfxDevRef.PreferredBackBufferHeight/  360.00; 
+                double scaleX_4_3 = gfxDevRef.PreferredBackBufferWidth / 400.0;
+                double scaleY_4_3 = gfxDevRef.PreferredBackBufferWidth / 300.0;
+                return new Rectangle(
+                Convert.ToInt32( posX * scaleY),
+                Convert.ToInt32( posY * scaleY),
+                Convert.ToInt32( width * scaleY),
+                Convert.ToInt32( height * scaleY));
         }
     }
 }

@@ -37,7 +37,11 @@ namespace Johnmagotchi
 
             base.Initialize();
             Components.Add(_screenManager);
-            _screenManager.setWindowSize(1280, 720);
+            _screenManager.setWindowSize(1280, 720); // 720p
+           //  _screenManager.setWindowSize(640, 480); // 4:3 
+           // _screenManager.setWindowSize(1440, 900); // some weird mac size
+
+
             gameScrn = new MapEditorScreen();
             _screenManager.addScreen(gameScrn);
           
