@@ -1,5 +1,4 @@
-﻿using Johnmagotchi.Screen.MainGame;
-using Johnmagotchi.Screen.MapEditor;
+﻿using Johnmagotchi.Screen.BattleMapScreens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -38,7 +37,7 @@ namespace Johnmagotchi
             base.Initialize();
             Components.Add(_screenManager);
             _screenManager.setWindowSize(1280, 720); // 720p
-           //  _screenManager.setWindowSize(640, 480); // 4:3 
+           // _screenManager.setWindowSize(640, 480); // 4:3 
            // _screenManager.setWindowSize(1440, 900); // some weird mac size
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,11 +13,14 @@ namespace Johnmagotchi.GameContent.Objects
 {
     public class BattleMap
     {
-        public int width;
-        public int height;
+        public int width { get; set; }
+        public int height{ get; set; }
+
+        public string serializedMapTiles{ get; set; }
 
       
-        public MapTile [,] MapTileGrid;
+        private MapTile [,] MapTileGrid;
+
         private SpriteBatch _spriteBatch;
         private ScreenManager _screenManager;
         private SpriteEffects currentSpriteEffects;  
@@ -24,17 +28,16 @@ namespace Johnmagotchi.GameContent.Objects
 
         Texture2D _outlineTexture;
 
-        public BattleMap() 
-        { 
-           this.height = 12; // default min height (shooting for  360 x 640 res, 9x16 = 40x40 pixel grid | 10x18 = 36x36px grid | 11.25 x 20 = 32x32 px grid)
-           this.width = 20;
+        public BattleMap(){
+            this.height = 10;
+            this.width =10;
            MapTileGrid = new MapTile[width,height];
         }
          public BattleMap(int width, int height) 
         { 
           this.height = height; // default min height (shooting for  360 x 640 res, 40x40 pixel grid)
            this.width = width;
-           MapTileGrid = new MapTile[height,width];
+           MapTileGrid = new MapTile[width,height];
       
         }
 
@@ -42,6 +45,14 @@ namespace Johnmagotchi.GameContent.Objects
             this.OutlineEnabled = true;
             this._screenManager = ScreenManager;
             initArray();
+            _spriteBatch = new SpriteBatch(_screenManager.GraphicsDevice);
+            _outlineTexture = _screenManager.contentRef.Load<Texture2D>("Map-UI/outline-32");
+        }
+
+
+        public void InitFromReload(ScreenManager ScreenManager){
+            this.OutlineEnabled = true;
+            this._screenManager = ScreenManager;
             _spriteBatch = new SpriteBatch(_screenManager.GraphicsDevice);
             _outlineTexture = _screenManager.contentRef.Load<Texture2D>("Map-UI/outline-32");
         }
@@ -68,14 +79,14 @@ namespace Johnmagotchi.GameContent.Objects
                 }
             }
         }
-        public void DrawMap(){
+        public void DrawMap(int xOffset, int yOffset){
             // this should probably be changed to only draw visible tiles instead of every single tile in the future
             for (int x =0; x < width; x++)
             {
                 for (int y =0; y < height; y++)
                 {
-                    int xLocation = (x * MapTile.TILE_WIDTH_PX);
-                    int yLocation = (y * MapTile.TILE_HEIGHT_PX);
+                    int xLocation = (x * MapTile.TILE_WIDTH_PX) + xOffset;
+                    int yLocation = (y * MapTile.TILE_HEIGHT_PX)+ yOffset;
                      MapTileGrid[x,y].DrawAt(xLocation, yLocation);
                 }
             }
@@ -89,8 +100,8 @@ namespace Johnmagotchi.GameContent.Objects
                 {
                     for (int y =0; y < height; y++)
                     {
-                        int xLocation = (x * MapTile.TILE_WIDTH_PX);
-                        int yLocation = (y * MapTile.TILE_HEIGHT_PX);
+                        int xLocation = (x * MapTile.TILE_WIDTH_PX) + xOffset;
+                        int yLocation = (y * MapTile.TILE_HEIGHT_PX)+ yOffset;
                         this.DrawOutlineSquare(xLocation, yLocation);
                     }
                 }
@@ -114,7 +125,37 @@ namespace Johnmagotchi.GameContent.Objects
                 if(x > 0){MapTileGrid[x-1,y].EastNeighborType = newType;} //update left neighbor
                 if(x < width -1){MapTileGrid[x +1,y].WestNeighborType = newType;} //update right neighbor
                 if(y > 0){MapTileGrid[x,y-1].SouthNeighborType = newType;} //update top neighbor
-                if(x < height -1){MapTileGrid[x ,y+1].NorthNeighborType = newType;} //update bottom neighbor
+                if(y < height -1){MapTileGrid[x ,y+1].NorthNeighborType = newType;} //update bottom neighbor
+        }
+
+        public void serializeMapTiles(){
+            List<string> serializedRows = new List<string>();
+            for (int row = 0; row < this.height; row ++){
+               
+                List<MapTile> rowData = new List<MapTile>();
+                for (int column =0; column < this.width; column++){
+                   rowData.Add(  MapTileGrid[column, row]); // grid is width, height
+                }
+                 serializedRows.Add( JsonSerializer.Serialize(rowData));
+            }
+            serializedMapTiles = JsonSerializer.Serialize(serializedRows);
+        }
+
+        public void deserializeMapTiles(){
+            System.Console.WriteLine("Deserializing Map Tiles...");
+            MapTileGrid = new  MapTile[width,height];
+             List<string> serializedRows = JsonSerializer.Deserialize<List<string>>(serializedMapTiles);
+             for (int row= 0; row < serializedRows.Count; row++){
+                string currentRow = serializedRows[row];
+                List<MapTile> rowData =  JsonSerializer.Deserialize<List<MapTile>>(currentRow);
+                  for (int column =0; column < rowData.Count; column++){
+                    MapTile tile = rowData[column];
+                    MapTileGrid[column, row] = tile;
+                    MapTileGrid[column, row].Init(_screenManager);
+                  }
+             }
+           //  initArray();
+              System.Console.WriteLine("Deserialition Completed!");
         }
     }
 }

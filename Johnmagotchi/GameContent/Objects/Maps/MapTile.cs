@@ -12,7 +12,10 @@ namespace Johnmagotchi.GameContent.Objects
         public static readonly int TILE_HEIGHT_PX = 32;
         public static readonly int TILE_WIDTH_PX = 32;
 
-        public TileType Type;
+        public TileType Type { get; set; }
+
+        public TileSubType SubType { get; set; }
+         
         public TileType NorthNeighborType;
         public TileType SouthNeighborType;
         public TileType EastNeighborType;
@@ -28,18 +31,22 @@ namespace Johnmagotchi.GameContent.Objects
         public bool facingLeft;
         public float spriteRotation;
         public SpriteEffects currentSpriteEffects;  
-        Texture2D TileTexture;
+        Texture2D GrassTileTexture;
+        Texture2D SeaTileTexture;
+
 
         public MapTile()
         {
          this.Type = TileType.GRASS;
+         this.SubType = TileSubType.NONE;
         }
         public void Init(ScreenManager screenManager)
         {
          
             _screenManager = screenManager;
             spriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
-            TileTexture = screenManager.contentRef.Load<Texture2D>("Tiles/Grass/grass-1");
+            GrassTileTexture = screenManager.contentRef.Load<Texture2D>("Tiles/Grass/grass-1");
+            SeaTileTexture= screenManager.contentRef.Load<Texture2D>("Tiles/Sea/ocean");
         }
 
         public void ChangeType(TileType newType)
@@ -62,10 +69,23 @@ namespace Johnmagotchi.GameContent.Objects
 
             // all rectangles should do the scaling from world coordinates to screen coordinates
             Rectangle tileRect = _screenManager.GetScaledRectangle(posX, posY, TILE_WIDTH_PX , TILE_HEIGHT_PX); 
-        
             
+            Texture2D currentTexture;
+
+            switch(this.Type){
+                case TileType.GRASS:
+                    currentTexture = GrassTileTexture;
+                break;
+                case TileType.SEA:
+                    currentTexture = SeaTileTexture;
+                break;
+                default:
+                    currentTexture = GrassTileTexture;
+                break;
+            }
+          
             spriteBatch.Draw(
-                TileTexture, tileRect, null, Color.White, 0, new Vector2(0, 0),
+                currentTexture, tileRect, null, Color.White, 0, new Vector2(0, 0),
                 currentSpriteEffects, 1);
     
             spriteBatch.End();

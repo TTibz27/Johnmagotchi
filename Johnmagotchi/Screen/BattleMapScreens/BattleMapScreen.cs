@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using TibzGame.Core.Inputs;
 using TibzGame.Core.ScreenManager;
 
-namespace Johnmagotchi.Screen.MainGame
+namespace Johnmagotchi.Screen.BattleMapScreens
 {
-    internal class BattleMapBaseScreen : GameScreen
+    internal class BattleMapScreen : GameScreen
     {
         public override void Destroy()
         {
@@ -32,6 +32,10 @@ namespace Johnmagotchi.Screen.MainGame
         public override void Update()
         {
             throw new NotImplementedException();
+        }
+
+        public void ChildUpdate() {
+            
         }
     }
 }

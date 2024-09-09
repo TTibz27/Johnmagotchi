@@ -1,0 +1,1 @@
+this directory is used for game save data and other persistant data

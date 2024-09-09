@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Reflection.Metadata;
 using System.Text;
 using Johnmagotchi.GameContent;
 using Microsoft.Xna.Framework;
@@ -21,6 +22,11 @@ namespace TibzGame.Core.ScreenManager
         public GameScreen[] newScreenBuffer;
         public int removeScreenCount;
         public GlobalData gameData;
+
+        private const int SCALED_PIXELS_WIDTH = 640; // 640
+        private const int SCALED_PIXELS_HEIGHT = 360; // 360
+        //    double scaleX_4_3 = gfxDevRef.PreferredBackBufferWidth / 300.0;
+        //         double scaleY_4_3 = gfxDevRef.PreferredBackBufferWidth / 240.0;
         public ScreenManager(Game game, ref GraphicsDeviceManager gfxRef, ref ContentManager contentManagerRef, ref InputManager inputManager)
             : base(game)
         {
@@ -142,24 +148,29 @@ namespace TibzGame.Core.ScreenManager
 
         // 360 x 640 res
         public double GetScreenScaleX(){
-            return  gfxDevRef.PreferredBackBufferWidth / 640.0;
+            return  gfxDevRef.PreferredBackBufferWidth / (float)  SCALED_PIXELS_WIDTH;
         }
 
         public double GetScreenScaleY(){
-            return gfxDevRef.PreferredBackBufferHeight/  360.00 ;
+            return gfxDevRef.PreferredBackBufferHeight/  (float) SCALED_PIXELS_HEIGHT ;
         }
 
         public Rectangle GetScaledRectangle(int posX, int posY, int width, int height){
 
-                double scaleX = gfxDevRef.PreferredBackBufferWidth / 640.0;
-                double scaleY = gfxDevRef.PreferredBackBufferHeight/  360.00; 
-                double scaleX_4_3 = gfxDevRef.PreferredBackBufferWidth / 400.0;
-                double scaleY_4_3 = gfxDevRef.PreferredBackBufferWidth / 300.0;
+                double scaleX = (float) gfxDevRef.PreferredBackBufferWidth / (float)  SCALED_PIXELS_WIDTH;
+                double scaleY = (float) gfxDevRef.PreferredBackBufferHeight/  (float) SCALED_PIXELS_HEIGHT; 
                 return new Rectangle(
-                Convert.ToInt32( posX * scaleY),
+                Convert.ToInt32( posX * scaleX), // todo- these probably need to be fixed if we want to support arbitrary scaling, they need to be viewport res not "upscaled game screen res" 
                 Convert.ToInt32( posY * scaleY),
-                Convert.ToInt32( width * scaleY),
+                Convert.ToInt32( width * scaleX),
                 Convert.ToInt32( height * scaleY));
+        }
+
+        public int GetScaledPixelScreenWidth(){
+            return SCALED_PIXELS_WIDTH;
+        }
+              public int GetScaledPixelScreenHeight(){
+            return SCALED_PIXELS_HEIGHT;
         }
     }
 }

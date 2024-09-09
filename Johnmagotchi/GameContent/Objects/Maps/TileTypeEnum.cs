@@ -10,3 +10,9 @@ public enum TileType {
     SPECIAL,
     NULL
 }
+
+public enum TileSubType{
+    NONE,
+    SNOW,
+    DAMAGED
+}

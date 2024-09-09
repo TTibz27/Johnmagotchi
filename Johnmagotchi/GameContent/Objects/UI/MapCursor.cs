@@ -11,10 +11,6 @@ namespace Johnmagotchi.GameContent.Objects
     {
         private readonly int CURSOR_SIZE = 40;
 
-        public int GridPositionX;
-        public int GridPositionY;
-    
-
         private SpriteBatch spriteBatch;
         private ScreenManager _screenManager;
       
