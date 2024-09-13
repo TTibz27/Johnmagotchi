@@ -38,7 +38,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                  UnitLoader.GetTest();
         }
         public override void ChildUpdate() {
-              if(screenManager.inputs.editorInputs.special1.isJustPressed){
+            if(screenManager.inputs.editorInputs.special1.isJustPressed){
                 this.selectedTileType = TileType.GRASS;
             }
             if(screenManager.inputs.editorInputs.special2.isJustPressed){
@@ -46,11 +46,14 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             }
 
         
-              if(screenManager.inputs.editorInputs.special1.isJustPressed){
+            if(screenManager.inputs.editorInputs.special1.isJustPressed){
                 this.selectedTileType = TileType.GRASS;
             }
-              if(screenManager.inputs.editorInputs.special1.isJustPressed){
+            if(screenManager.inputs.editorInputs.special1.isJustPressed){
                 this.selectedTileType = TileType.GRASS;
+            }
+            if(screenManager.inputs.editorInputs.cancel.isJustPressed){
+               
             }
 
                 // DRAW CURRENT

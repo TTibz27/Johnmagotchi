@@ -89,6 +89,23 @@
 /processorParam:TextureFormat=Color
 /build:Map-UI/outline.png
 
+#begin Map-UI/test-menu-item-64-28-selected.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Map-UI/test-menu-item-64-28-selected.png
+
+#begin Map-UI/test-menu-item-64-28.aseprite
+/importer:
+/processor:
+/build:Map-UI/test-menu-item-64-28.aseprite
+
 #begin Tiles/Grass/grass-1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -292,4 +309,40 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/SingleButtonBGBright-export.png;UI/SingleButtonBGBright.png
+
+#begin Units/unit-test-enemy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Units/unit-test-enemy.png
+
+#begin Units/unit-test-npc.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Units/unit-test-npc.png
+
+#begin Units/unit-test.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Units/unit-test.png
 

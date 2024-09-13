@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TibzGame.Core.ScreenManager;
+using Johnmagotchi.GameContent.Units;
 
 namespace Johnmagotchi.GameContent.Objects
 {
@@ -21,6 +22,10 @@ namespace Johnmagotchi.GameContent.Objects
       
         private MapTile [,] MapTileGrid;
 
+        private  List<UnitObject> playerUnits;
+        private  List<UnitObject> npcUnits;
+        private  List<UnitObject> enemyUnits;            
+
         private SpriteBatch _spriteBatch;
         private ScreenManager _screenManager;
         private SpriteEffects currentSpriteEffects;  
@@ -29,16 +34,20 @@ namespace Johnmagotchi.GameContent.Objects
         Texture2D _outlineTexture;
 
         public BattleMap(){
-            this.height = 10;
-            this.width =10;
-           MapTileGrid = new MapTile[width,height];
+            buildMap(10,10);
         }
          public BattleMap(int width, int height) 
         { 
-          this.height = height; // default min height (shooting for  360 x 640 res, 40x40 pixel grid)
-           this.width = width;
+            buildMap(width,height);
+        }
+
+        public void buildMap(int w, int h){
+           this.height = h; // default min height (shooting for  360 x 640 res, 40x40 pixel grid)
+           this.width = w;
            MapTileGrid = new MapTile[width,height];
-      
+           this.playerUnits = new List<UnitObject>();
+           this.npcUnits = new List<UnitObject>();
+           this.enemyUnits = new List<UnitObject>();
         }
 
         public void Init(ScreenManager ScreenManager){
