@@ -9,7 +9,7 @@ namespace Johnmagotchi.GameContent.Objects
    
     public class MapCursor
     {
-        private readonly int CURSOR_SIZE = 40;
+        private readonly int CURSOR_SIZE = 40 *100;
 
         private SpriteBatch spriteBatch;
         private ScreenManager _screenManager;
@@ -33,8 +33,8 @@ namespace Johnmagotchi.GameContent.Objects
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            // offset by 4
-            Rectangle tileRect = _screenManager.GetScaledRectangle(posX -4, posY- 4, CURSOR_SIZE, CURSOR_SIZE); 
+            // offset by 4 X base zoom
+            Rectangle tileRect = _screenManager.GetScaledRectangle(posX -400, posY- 400, CURSOR_SIZE, CURSOR_SIZE); 
         
             
             spriteBatch.Draw(

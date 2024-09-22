@@ -15,6 +15,7 @@ using TibzGame.Core.Inputs;
 using TibzGame.Core.ScreenManager;
 using Johnmagotchi.Screen.BattleMapScreens;
 using  Johnmagotchi.GameContent.Units;
+using Johnmagotchi.Core.tools;
 
 namespace Johnmagotchi.Screen.BattleMapScreens
 {
@@ -25,8 +26,8 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
 
         public MapEditorScreen(){
-        
-        
+
+            this.isUpdatePriority = true;
         }
         public MapEditorScreen(BattleMap existingMap){
             this.CurrentMap = existingMap;
@@ -45,18 +46,20 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 this.selectedTileType = TileType.SEA;
             }
 
-        
-            if(screenManager.inputs.editorInputs.special1.isJustPressed){
-                this.selectedTileType = TileType.GRASS;
-            }
-            if(screenManager.inputs.editorInputs.special1.isJustPressed){
-                this.selectedTileType = TileType.GRASS;
-            }
             if(screenManager.inputs.editorInputs.cancel.isJustPressed){
-               
+                TibzLog.Debug("Cancel pressed");
+            }
+            if (screenManager.inputs.editorInputs.special5.isJustPressed)
+            {
+                this.screenManager.addScreen(
+                    new MapEditorMenu(
+                    this,
+                    (MapTile.TILE_WIDTH_PX * cursorIndexX) + scrollOffsetX, 
+                    (MapTile.TILE_HEIGHT_PX * cursorIndexY) + scrollOffsetY,
+                    1));
             }
 
-                // DRAW CURRENT
+            // DRAW CURRENT
             if (screenManager.inputs.editorInputs.confirm.isPressed){
                CurrentMap.ChangeTileType(this.cursorIndexX, this.cursorIndexY, this.selectedTileType);
             }

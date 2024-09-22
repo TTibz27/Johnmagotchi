@@ -101,10 +101,17 @@
 /processorParam:TextureFormat=Color
 /build:Map-UI/test-menu-item-64-28-selected.png
 
-#begin Map-UI/test-menu-item-64-28.aseprite
-/importer:
-/processor:
-/build:Map-UI/test-menu-item-64-28.aseprite
+#begin Map-UI/test-menu-item-64-28.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Map-UI/test-menu-item-64-28.png
 
 #begin Tiles/Grass/grass-1.png
 /importer:TextureImporter

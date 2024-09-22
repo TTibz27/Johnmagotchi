@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Reflection.Metadata;
 using System.Text;
+using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -23,17 +24,26 @@ namespace TibzGame.Core.ScreenManager
         public int removeScreenCount;
         public GlobalData gameData;
 
-        private const int SCALED_PIXELS_WIDTH = 640; // 640
-        private const int SCALED_PIXELS_HEIGHT = 360; // 360
-        //    double scaleX_4_3 = gfxDevRef.PreferredBackBufferWidth / 300.0;
-        //         double scaleY_4_3 = gfxDevRef.PreferredBackBufferWidth / 240.0;
+
+
+        //private const int SCALED_PIXELS_WIDTH = 640 * 100; // 640
+        //private const int SCALED_PIXELS_HEIGHT = 360 * 100; // 360
+        public static readonly int BASE_WORLD_UNIT_HEIGHT = 360;
+        public static readonly int BASE_ZOOM_LEVEL = 100;
+
+        private int CURRRENT_ZOOM_LEVEL = 100; // bigger number zooms out more.
+
+        private int SCALED_PIXELS_HEIGHT;//= 360 * 100; // 360
+        private int SCALED_PIXELS_WIDTH;// = 640 * 100;
+    
         public ScreenManager(Game game, ref GraphicsDeviceManager gfxRef, ref ContentManager contentManagerRef, ref InputManager inputManager)
             : base(game)
-        {
+        {         
             gfxDevRef = gfxRef;
             contentRef = contentManagerRef;
             inputs = inputManager;
 
+           
             newScreenBuffer = new GameScreen[0];
             removeScreenCount = 0;
             gameData  = new GlobalData(this);// todo = this would be where we load in existing save game data
@@ -128,11 +138,13 @@ namespace TibzGame.Core.ScreenManager
  
            
         }
-        public void removeTopScreens(int screenCount) {
+        public void removeTopScreens(int screenCount) 
+        {
             removeScreenCount = screenCount;
         }
 
-        public void setWindowSize(ushort width, ushort height) {
+        public void setWindowSize(ushort width, ushort height) 
+        {
             //ushort[] widths = new ushort[] { 3840, 2560, 2560, 1920, 1366, 1280, 1280 };
             //ushort [] heights = new ushort[] { 2160, 1440, 1080, 1080, 768, 1024, 720 };
 
@@ -140,10 +152,20 @@ namespace TibzGame.Core.ScreenManager
             gfxDevRef.PreferredBackBufferHeight = height;
 
             // Apply the changes
+            TibzLog.Debug("New resolution: {0} x {1}", gfxDevRef.PreferredBackBufferWidth, gfxDevRef.PreferredBackBufferHeight);
+
             gfxDevRef.ApplyChanges();
 
-            System.Console.WriteLine("New resolution: {0} x {1}", gfxDevRef.PreferredBackBufferWidth, gfxDevRef.PreferredBackBufferHeight);
+            RescaleWorldUnits();
+            
+        }
 
+
+        public void setFullScreen(bool enabled) 
+        {
+            gfxDevRef.IsFullScreen = enabled;
+            gfxDevRef.ApplyChanges();
+            RescaleWorldUnits();
         }
 
         // 360 x 640 res
@@ -160,10 +182,11 @@ namespace TibzGame.Core.ScreenManager
                 double scaleX = (float) gfxDevRef.PreferredBackBufferWidth / (float)  SCALED_PIXELS_WIDTH;
                 double scaleY = (float) gfxDevRef.PreferredBackBufferHeight/  (float) SCALED_PIXELS_HEIGHT; 
                 return new Rectangle(
-                Convert.ToInt32( posX * scaleX), // todo- these probably need to be fixed if we want to support arbitrary scaling, they need to be viewport res not "upscaled game screen res" 
-                Convert.ToInt32( posY * scaleY),
-                Convert.ToInt32( width * scaleX),
-                Convert.ToInt32( height * scaleY));
+                    Convert.ToInt32(Math.Floor(posX * scaleX)), //Round down the next tile position to reduce where gaps occur 
+                    Convert.ToInt32(Math.Floor( posY * scaleY)),
+                    Convert.ToInt32(Math.Ceiling(width * scaleX)), // Round up tile size to reduce gaps in tile map
+                    Convert.ToInt32(Math.Ceiling(height * scaleY))
+                );
         }
 
         public int GetScaledPixelScreenWidth(){
@@ -171,6 +194,12 @@ namespace TibzGame.Core.ScreenManager
         }
               public int GetScaledPixelScreenHeight(){
             return SCALED_PIXELS_HEIGHT;
+        }
+        private void RescaleWorldUnits() {
+            float heightWidthRatio = (float)gfxDevRef.PreferredBackBufferWidth / (float)gfxDevRef.PreferredBackBufferHeight;
+            SCALED_PIXELS_HEIGHT = BASE_WORLD_UNIT_HEIGHT * CURRRENT_ZOOM_LEVEL; // 360
+            SCALED_PIXELS_WIDTH = Convert.ToInt32(SCALED_PIXELS_HEIGHT * heightWidthRatio);
+            TibzLog.Debug("Scaled Height: {0}, Scaled Width {1}", SCALED_PIXELS_HEIGHT, SCALED_PIXELS_WIDTH);
         }
     }
 }

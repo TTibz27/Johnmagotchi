@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TibzGame.Core.ScreenManager;
 using Johnmagotchi.GameContent.Units;
+using Johnmagotchi.Core.tools;
 
 namespace Johnmagotchi.GameContent.Objects
 {
@@ -94,9 +95,11 @@ namespace Johnmagotchi.GameContent.Objects
             {
                 for (int y =0; y < height; y++)
                 {
+                   
                     int xLocation = (x * MapTile.TILE_WIDTH_PX) + xOffset;
                     int yLocation = (y * MapTile.TILE_HEIGHT_PX)+ yOffset;
                      MapTileGrid[x,y].DrawAt(xLocation, yLocation);
+                   // TibzLog.Debug("drawing tile XPos: {0} , YPos: {1}", xLocation, yLocation );
                 }
             }
 

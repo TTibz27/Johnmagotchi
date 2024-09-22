@@ -41,7 +41,7 @@ namespace TibzGame.Core.Inputs
 
         public void registerButtons(KeyboardState kbState){
             confirm.RegisterButtonPress(kbState.IsKeyDown(Keys.Enter));
-            cancel.RegisterButtonPress(kbState.IsKeyDown(Keys.Escape)); 
+            cancel.RegisterButtonPress(kbState.IsKeyDown(Keys.Back)); 
             navUp.RegisterButtonPress(kbState.IsKeyDown(Keys.Up));
             navDown.RegisterButtonPress(kbState.IsKeyDown(Keys.Down));
             navLeft.RegisterButtonPress(kbState.IsKeyDown(Keys.Left));

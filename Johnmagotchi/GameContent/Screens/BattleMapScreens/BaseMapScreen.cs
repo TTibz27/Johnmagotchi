@@ -25,8 +25,8 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
         protected int cursorIndexY;
 
-        private int scrollOffsetX;
-        private int scrollOffsetY;
+        protected int scrollOffsetX;
+        protected int scrollOffsetY;
 
         private readonly ulong CURSOR_HOLD_FRAMES = 25;
         private readonly int SCROLL_BOOST_TIME_FRAMES = 60;
@@ -35,15 +35,12 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         private readonly int SCROLL_TILES_FROM_EDGE_X = 3;
         private readonly int SCROLL_TILES_FROM_EDGE_Y = 2;
 
-
         private int scrollTimer ; // frames until click to next 
         private int scrollTotalDuration;
 
         private string tempSave;
 
         public Boolean ScreenScrollLock = false;
-
-
 
 
         public BaseMapScreen(){
@@ -80,15 +77,15 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         public override void Draw()
         {
         
-            bool stopXScroll = false;
-            bool stopYScroll = false;
+           // bool stopXScroll = false;
+            //bool stopYScroll = false;
             if ((this.CurrentMap.width * MapTile.TILE_WIDTH_PX) < this.ScreenManager.GetScaledPixelScreenWidth()) { // center width
                 scrollOffsetX = (this.ScreenManager.GetScaledPixelScreenWidth() - (this.CurrentMap.width * MapTile.TILE_WIDTH_PX))/2;
-                stopXScroll = true;
+             //   stopXScroll = true;
             }
             if ((this.CurrentMap.height * MapTile.TILE_HEIGHT_PX) < this.ScreenManager.GetScaledPixelScreenHeight()){ // center height
                 scrollOffsetY = (this.ScreenManager.GetScaledPixelScreenHeight() - (this.CurrentMap.height * MapTile.TILE_HEIGHT_PX))/2;
-                stopYScroll = true;
+            //    stopYScroll = true;
             }
 
            

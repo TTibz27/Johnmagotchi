@@ -1,4 +1,5 @@
 using System;
+using Johnmagotchi.Core.tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TibzGame.Core.Inputs;
@@ -9,8 +10,8 @@ namespace Johnmagotchi.GameContent.Objects
    
     public class MapTile
     {
-        public static readonly int TILE_HEIGHT_PX = 32;
-        public static readonly int TILE_WIDTH_PX = 32;
+        public static readonly int TILE_HEIGHT_PX = 32 * ScreenManager.BASE_ZOOM_LEVEL;
+        public static readonly int TILE_WIDTH_PX = 32 * ScreenManager.BASE_ZOOM_LEVEL;
 
         public TileType Type { get; set; }
 
@@ -35,6 +36,7 @@ namespace Johnmagotchi.GameContent.Objects
         Texture2D SeaTileTexture;
 
 
+        public Texture2D currentTexture;
         public MapTile()
         {
          this.Type = TileType.GRASS;
@@ -47,11 +49,13 @@ namespace Johnmagotchi.GameContent.Objects
             spriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
             GrassTileTexture = screenManager.contentRef.Load<Texture2D>("Tiles/Grass/grass-1");
             SeaTileTexture= screenManager.contentRef.Load<Texture2D>("Tiles/Sea/ocean");
+            updateCurrentTexture();
         }
 
         public void ChangeType(TileType newType)
         {
             this.Type = newType;
+            updateCurrentTexture();
         }
 
         public void NullNeighbors()
@@ -68,27 +72,34 @@ namespace Johnmagotchi.GameContent.Objects
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // all rectangles should do the scaling from world coordinates to screen coordinates
-            Rectangle tileRect = _screenManager.GetScaledRectangle(posX, posY, TILE_WIDTH_PX , TILE_HEIGHT_PX); 
-            
-            Texture2D currentTexture;
+            Rectangle tileRect = _screenManager.GetScaledRectangle(posX, posY, TILE_WIDTH_PX , TILE_HEIGHT_PX);
 
-            switch(this.Type){
-                case TileType.GRASS:
-                    currentTexture = GrassTileTexture;
-                break;
-                case TileType.SEA:
-                    currentTexture = SeaTileTexture;
-                break;
-                default:
-                    currentTexture = GrassTileTexture;
-                break;
-            }
-          
+
+            //TibzLog.Debug("Scaled xPos: {0}, yPos: {1}" , tileRect.X, tileRect.Y);
+           // Texture2D currentTexture;
+
+    
             spriteBatch.Draw(
                 currentTexture, tileRect, null, Color.White, 0, new Vector2(0, 0),
                 currentSpriteEffects, 1);
     
             spriteBatch.End();
+        }
+
+        private void updateCurrentTexture() {
+            switch (this.Type)
+            {
+                case TileType.GRASS:
+                    currentTexture = GrassTileTexture;
+                    break;
+                case TileType.SEA:
+                    currentTexture = SeaTileTexture;
+                    break;
+                default:
+                    currentTexture = GrassTileTexture;
+                    break;
+            }
+
         }
     }
 }

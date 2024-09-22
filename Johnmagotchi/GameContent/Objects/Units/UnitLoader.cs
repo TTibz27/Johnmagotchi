@@ -1,13 +1,18 @@
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Johnmagotchi.Core.tools;
 
 namespace Johnmagotchi.GameContent.Units
 {
     public class UnitLoader
     {
         public static List<string> GetTest(){
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "GameContent/Objects/Units/test.csv");
-             List<string> listA = new List<string>();
+            // MAC OS also prly Linux -  var path = Path.Combine(Directory.GetCurrentDirectory(), "GameContent/Objects/Units/UnitDefines.csv");
+
+            System.Console.WriteLine("PATH: {0}", Directory.GetCurrentDirectory());
+            var path =  "..\\..\\..\\GameContent\\Objects\\Units\\UnitDefines.csv";
+            List<string> listA = new List<string>();
              List<string> listB = new List<string>();
               System.Console.WriteLine("path: {0} ", path);
             using(var reader = new StreamReader(path))
@@ -21,7 +26,8 @@ namespace Johnmagotchi.GameContent.Units
                     listA.Add(values[0]);
                     listB.Add(values[1]);
 
-                    System.Console.WriteLine("Values: {0} , {1}", values[0], values[1]);
+                    TibzLog.Debug("Values: {0} , {1}", values[0], values[1]);
+        
                 }
             }
             return listA;
