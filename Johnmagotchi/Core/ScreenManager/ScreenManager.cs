@@ -31,7 +31,7 @@ namespace TibzGame.Core.ScreenManager
         public static readonly int BASE_WORLD_UNIT_HEIGHT = 360;
         public static readonly int BASE_ZOOM_LEVEL = 100;
 
-        private int CURRRENT_ZOOM_LEVEL = 100; // bigger number zooms out more.
+        public int CURRRENT_ZOOM_LEVEL = 100; // bigger number zooms out more.
 
         private int SCALED_PIXELS_HEIGHT;//= 360 * 100; // 360
         private int SCALED_PIXELS_WIDTH;// = 640 * 100;
