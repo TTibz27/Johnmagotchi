@@ -51,12 +51,37 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             }
             if (screenManager.inputs.editorInputs.special5.isJustPressed)
             {
+                int quadrant = 4;
+               if( (MapTile.TILE_HEIGHT_PX * cursorIndexY) + scrollOffsetY < ScreenManager.GetScaledPixelScreenHeight() / 2) // top
+                {
+                    if ((MapTile.TILE_WIDTH_PX * cursorIndexX) + scrollOffsetX > ScreenManager.GetScaledPixelScreenWidth() /2) // right
+                    {
+                        quadrant = 1;
+                    }
+                    else // left
+                    {
+                        quadrant = 2;
+                    }
+                }
+              
+                else //bottom
+                {
+                    if ((MapTile.TILE_WIDTH_PX * cursorIndexX) + scrollOffsetX < ScreenManager.GetScaledPixelScreenWidth() / 2) // left
+                    {
+                        quadrant = 3;
+                    }
+                    else // right
+                    {
+                        quadrant = 4;
+                    }
+                }
+                TibzLog.Debug("opening menu in Quadrant: {0}", quadrant);
                 this.screenManager.addScreen(
                     new MapEditorMenu(
                     this,
                     (MapTile.TILE_WIDTH_PX * cursorIndexX) + scrollOffsetX, 
                     (MapTile.TILE_HEIGHT_PX * cursorIndexY) + scrollOffsetY,
-                    1));
+                    quadrant));
             }
 
             // DRAW CURRENT

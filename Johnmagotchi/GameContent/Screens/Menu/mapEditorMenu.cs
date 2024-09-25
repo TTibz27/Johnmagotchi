@@ -26,6 +26,9 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         private int xPos;
         private int yPos;
 
+        private int xDrawOffset;
+        private int yDrawOffset;
+
         private MenuOption[] currentOptions;
 
         Texture2D button;
@@ -33,7 +36,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         SpriteFont kemco;
         private int screenQuadrant; // 1 - top left, 2 top right, 3 bottom left, 4 bottom right. if right, submenus push out left. if bottom, start drawing from bottom up
 
-        public MapEditorMenu(MapEditorScreen parentScreen, int x, int y, int screenQuadrant){
+        public MapEditorMenu(MapEditorScreen parentScreen, int x, int y, int screenQuadrant) {
             mapEditor = parentScreen;
             xPos = x;
             yPos = y;
@@ -45,6 +48,24 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             currentOptions[2] = new MenuOption(MenuOption.MenuOptionType.EXPORT_MAP);
             currentOptions[3] = new MenuOption(MenuOption.MenuOptionType.ENTER_BATTLE_SCREEN);
             currentOptions[4] = new MenuOption(MenuOption.MenuOptionType.EXIT);
+            if (screenQuadrant == 1)
+            {
+                xDrawOffset = 7000;
+                yDrawOffset =  (-2800 * (currentOptions.Length -1)) - 300; 
+            }
+            else if (screenQuadrant == 2) {
+                xDrawOffset = -3800;
+                yDrawOffset = (-2800 * (currentOptions.Length - 1)) - 300;
+            }
+            else if (screenQuadrant == 3) {
+                xDrawOffset = -3800;
+                yDrawOffset = 0;
+            }
+            else {
+                xDrawOffset = 7000;
+                yDrawOffset = 0;
+            }
+
         }
 
         public override void Init()
@@ -66,13 +87,13 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         public override void Draw(){
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            int yOffset = 400;
+            int yOffset = yDrawOffset;
             if (screenQuadrant >2) { // adjust y offset so it starts a full length higher up
             
             }
             for (int i = 0; i < currentOptions.Length; i++)
             {
-                Rectangle tileRect = screenManager.GetScaledRectangle(xPos - 400, yPos - yOffset, 6400, 2800);
+                Rectangle tileRect = screenManager.GetScaledRectangle(xPos - xDrawOffset, yPos - yOffset, 6400, 2800);
                 spriteBatch.Draw(
                              button, tileRect, null, Color.White, 0, new Vector2(0, 0),
                              currentSpriteEffects, 1);
