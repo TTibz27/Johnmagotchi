@@ -174,8 +174,15 @@ namespace TibzGame.Core.ScreenManager
         }
 
         public double GetScreenScaleY(){
-            return gfxDevRef.PreferredBackBufferHeight/  (float) SCALED_PIXELS_HEIGHT ;
+            return gfxDevRef.PreferredBackBufferHeight/  (float) SCALED_PIXELS_HEIGHT;
         }
+
+        public int getScaledIntX(int x) {
+            return (int)(x * GetScreenScaleX());
+        }
+        public int getScaledIntY(int y) {
+            return (int)(y * GetScreenScaleY());
+        }    
 
         public Rectangle GetScaledRectangle(int posX, int posY, int width, int height){
 

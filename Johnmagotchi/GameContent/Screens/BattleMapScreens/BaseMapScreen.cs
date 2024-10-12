@@ -28,6 +28,8 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         protected int scrollOffsetX;
         protected int scrollOffsetY;
 
+        public int CursorQuadrant;
+
         private readonly ulong CURSOR_HOLD_FRAMES = 25;
         private readonly int SCROLL_BOOST_TIME_FRAMES = 60;
         private readonly int CURSOR_SCROLL_NEXT_INC_FRAMES= 5;
@@ -43,12 +45,18 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         public Boolean ScreenScrollLock = false;
 
 
+        public abstract void ChildInit();
+        public abstract void ChildUpdate();
+        public abstract void ChildDraw();
+
+
         public BaseMapScreen(){
             this.CurrentMap = new BattleMap(24,20);
             this.MapCursor = new MapCursor();
             saveCurrentMap();
         }
         public BaseMapScreen(BattleMap existingMap){
+            this.MapCursor = new MapCursor();
             this.CurrentMap = existingMap;
         }
 
@@ -67,7 +75,6 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
             ChildInit();
         }
-        public abstract void ChildInit();
 
         public override void Destroy()
         {
@@ -96,11 +103,15 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             this.MapCursor.Draw( (MapTile.TILE_WIDTH_PX *cursorIndexX) + scrollOffsetX , (MapTile.TILE_HEIGHT_PX * cursorIndexY) + scrollOffsetY);
             // units
             // ui overlay 
+            ChildDraw();
         }
 
         public override void Update()
         {
-            //Single Button Presses
+         // Updates
+            UpdateCursorQuadrant(); // This doesnt need to be called every frame, but its easy. so.
+
+        //Check Button Presses
             if (screenManager.inputs.editorInputs.navLeft.isJustPressed){
               TickCursorLeft();
             }
@@ -113,10 +124,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             if (screenManager.inputs.editorInputs.navDown.isJustPressed){
                 TickCursorDown();
             }
-
-          
-
-           if(screenManager.inputs.editorInputs.saveButton.isJustPressed){
+            if(screenManager.inputs.editorInputs.saveButton.isJustPressed){
                 saveCurrentMap();
             }
             if(screenManager.inputs.editorInputs.loadButton.isJustPressed){
@@ -124,7 +132,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             }
 
 
-            //Button Holds
+         //Button Holds
             if (screenManager.inputs.editorInputs.navLeft.heldTime > CURSOR_HOLD_FRAMES)
             {
                 IncrementScrollTimers();
@@ -161,11 +169,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                     scrollTimer = 0;
                   TickCursorDown();
                 }
-            }  
-       
-
-
-            
+            }   
             if (ScreenManager.inputs.editorInputs.navLeft.isJustReleased|| // reset scroll timers on release
             ScreenManager.inputs.editorInputs.navRight.isJustReleased||
             ScreenManager.inputs.editorInputs.navUp.isJustReleased||
@@ -175,13 +179,10 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 scrollTotalDuration = 0;
             }
 
-
+        // End Update, call child
             ChildUpdate();
-            
-          
         }
 
-        public abstract void ChildUpdate();
         private void TickCursorLeft()
         {
             if (cursorIndexX > 0) cursorIndexX --;
@@ -314,6 +315,33 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                   System.Console.WriteLine("valid save state not found");
              }
            
+        }
+
+        private void UpdateCursorQuadrant() {
+            
+            if ((MapTile.TILE_HEIGHT_PX * cursorIndexY) + scrollOffsetY < ScreenManager.GetScaledPixelScreenHeight() / 2) // top
+            {
+                if ((MapTile.TILE_WIDTH_PX * cursorIndexX) + scrollOffsetX > ScreenManager.GetScaledPixelScreenWidth() / 2) // right
+                {
+                    CursorQuadrant = 1;
+                }
+                else // left
+                {
+                    CursorQuadrant = 2;
+                }
+            }
+
+            else //bottom
+            {
+                if ((MapTile.TILE_WIDTH_PX * cursorIndexX) + scrollOffsetX < ScreenManager.GetScaledPixelScreenWidth() / 2) // left
+                {
+                    CursorQuadrant = 3;
+                }
+                else // right
+                {
+                    CursorQuadrant = 4;
+                }
+            }
         }
     }
 }

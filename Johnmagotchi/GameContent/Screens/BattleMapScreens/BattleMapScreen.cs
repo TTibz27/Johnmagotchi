@@ -1,3 +1,4 @@
+using Johnmagotchi.GameContent.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,8 +13,12 @@ using TibzGame.Core.ScreenManager;
 
 namespace Johnmagotchi.Screen.BattleMapScreens
 {
-    internal class BattleMapScreen : GameScreen
+    internal class BattleMapScreen : BaseMapScreen
     {
+        public BattleMapScreen(BattleMap map): base(map)
+        {
+            
+        }
         public override void Destroy()
         {
             throw new NotImplementedException();
@@ -24,18 +29,19 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             throw new NotImplementedException();
         }
 
-        public override void Init()
+        public override void ChildInit()
         {
             throw new NotImplementedException();
         }
 
-        public override void Update()
+        public override void ChildUpdate()
         {
             throw new NotImplementedException();
         }
 
-        public void ChildUpdate() {
-            
+        public override void ChildDraw()
+        {
+            throw new NotImplementedException();
         }
     }
 }
