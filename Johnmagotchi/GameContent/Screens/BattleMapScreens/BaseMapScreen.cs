@@ -11,6 +11,7 @@ using TibzGame.Core.Inputs;
 using TibzGame.Core.ScreenManager;
 using Johnmagotchi.GameContent.Objects;
 using System.Text.Json;
+using Johnmagotchi.GameContent.Units;
 
 namespace Johnmagotchi.Screen.BattleMapScreens
 {
@@ -101,7 +102,9 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             //draw on top of background :
             //cursor
             this.MapCursor.Draw( (MapTile.TILE_WIDTH_PX *cursorIndexX) + scrollOffsetX , (MapTile.TILE_HEIGHT_PX * cursorIndexY) + scrollOffsetY);
+
             // units
+            this.CurrentMap.DrawUnits(scrollOffsetX, scrollOffsetY);// should draw background
             // ui overlay 
             ChildDraw();
         }
@@ -179,8 +182,12 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 scrollTotalDuration = 0;
             }
 
+        // update battle map
+            CurrentMap.Update();
+
         // End Update, call child
             ChildUpdate();
+
         }
 
         private void TickCursorLeft()

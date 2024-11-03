@@ -7,5 +7,6 @@ namespace Johnmagotchi.GameContent.Units
         public int attack {get; set;}
         public int defense {get; set;}
         public int speed {get; set;}
+        public int movement { get; set;}
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using TibzGame.Core.ScreenManager;
 using Johnmagotchi.GameContent.Units;
 using Johnmagotchi.Core.tools;
+using System.Runtime.ExceptionServices;
 
 namespace Johnmagotchi.GameContent.Objects
 {
@@ -24,9 +25,9 @@ namespace Johnmagotchi.GameContent.Objects
         private MapTile [,] MapTileGrid;
 
         private  List<UnitObject> playerUnits;
-        private  List<UnitObject> npcUnits;
-        private  List<UnitObject> enemyUnits;            
-
+        private List<UnitObject> enemyUnits;
+        private List<UnitObject> npcUnits;
+        
         private SpriteBatch _spriteBatch;
         private ScreenManager _screenManager;
         private SpriteEffects currentSpriteEffects;  
@@ -67,6 +68,21 @@ namespace Johnmagotchi.GameContent.Objects
             _outlineTexture = _screenManager.contentRef.Load<Texture2D>("Map-UI/outline-32");
         }
 
+        public void Update() {
+            foreach (UnitObject unit in playerUnits)
+            {
+                unit.Update();
+            }
+            foreach (UnitObject unit in enemyUnits)
+            {
+                unit.Update();
+            }
+            foreach (UnitObject unit in npcUnits)
+            {
+                unit.Update();
+            }
+        }
+
         public void initArray(){
             // init tiles
             for (int x =0; x < width; x++)
@@ -90,12 +106,11 @@ namespace Johnmagotchi.GameContent.Objects
             }
         }
         public void DrawMap(int xOffset, int yOffset){
-            // this should probably be changed to only draw visible tiles instead of every single tile in the future
+            // this could probably be changed to only draw visible tiles instead of every single tile in the future
             for (int x =0; x < width; x++)
             {
                 for (int y =0; y < height; y++)
                 {
-                   
                     int xLocation = (x * MapTile.TILE_WIDTH_PX) + xOffset;
                     int yLocation = (y * MapTile.TILE_HEIGHT_PX)+ yOffset;
                      MapTileGrid[x,y].DrawAt(xLocation, yLocation);
@@ -129,6 +144,28 @@ namespace Johnmagotchi.GameContent.Objects
             _spriteBatch.Draw(
                 _outlineTexture, tileRect, null, Color.White, 0, new Vector2(0, 0),
                 currentSpriteEffects, 1);
+        }
+
+
+        public void DrawUnits(int xOffset, int yOffset) {
+
+            foreach(UnitObject unit in playerUnits) { 
+                int xLocation = (unit.xPos * MapTile.TILE_WIDTH_PX) + xOffset;
+                int yLocation = (unit.yPos * MapTile.TILE_HEIGHT_PX) + yOffset;
+                unit.DrawAt( xLocation, yLocation);
+            }
+            foreach (UnitObject unit in enemyUnits)
+            {
+                int xLocation = (unit.xPos * MapTile.TILE_WIDTH_PX) + xOffset;
+                int yLocation = (unit.yPos * MapTile.TILE_HEIGHT_PX) + yOffset;
+                unit.DrawAt( xLocation, yLocation);
+            }
+            foreach (UnitObject unit in npcUnits)
+            {
+                int xLocation = (unit.xPos * MapTile.TILE_WIDTH_PX) + xOffset;
+                int yLocation = (unit.yPos * MapTile.TILE_HEIGHT_PX) + yOffset;
+                unit.DrawAt(xLocation, yLocation);
+            }
         }
 
         public void ChangeTileType(int x, int y, TileType newType)
@@ -168,6 +205,96 @@ namespace Johnmagotchi.GameContent.Objects
              }
            //  initArray();
               System.Console.WriteLine("Deserialition Completed!");
+        }
+
+        public void AddPlayerUnit(UnitObject unitRef, int xpos, int ypos)
+        {
+            UnitObject unit = new UnitObject(unitRef);
+
+            unit.xPos = xpos;
+            unit.yPos = ypos;
+            if (unit.isUnique == true)
+            {
+                //check then replace
+                for (int i = 0; i < playerUnits.Count; i++)
+                {
+                    if (playerUnits[i].id == unit.id )
+                    {          
+                        playerUnits[i].xPos = xpos;
+                        playerUnits[i].yPos = ypos;
+                        return; // dont add
+                    }
+                }
+                playerUnits.Add(unit); // else add
+            }
+            else {
+                playerUnits.Add(unit);
+                TibzLog.Debug(playerUnits.Count);
+            }
+
+            unit.InitSprite(_screenManager);
+            unit.setShaderSet(UnitObject.SpriteShaderSets.PLAYER_NORMAL);
+        }
+        public void AddEnemyUnit(UnitObject unitRef, int xpos, int ypos)
+        {
+
+            UnitObject unit = new UnitObject(unitRef);
+            unit.xPos = xpos;
+            unit.yPos = ypos;
+            if (unit.isUnique == true)
+            {
+                //check then replace
+                for (int i = 0; i < enemyUnits.Count; i++)
+                {
+                    if (enemyUnits[i].id == unit.id)
+                    {
+                        TibzLog.Debug("updating existing unique unit -  x:{0}, y: {1}", unit.xPos, unit.yPos);
+                        enemyUnits[i].xPos = xpos;
+                        enemyUnits[i].yPos = ypos;
+                        return; // dont add
+                    }
+                }
+                TibzLog.Debug("adding new unique unit -  x:{0}, y: {1}", unit.xPos, unit.yPos);
+                enemyUnits.Add(unit); // else add
+            }
+            else
+            {
+                TibzLog.Debug("adding new non-unique unit -  x:{0}, y: {1}", unit.xPos, unit.yPos);
+                enemyUnits.Add(unit);
+            }
+            unit.InitSprite(_screenManager);
+            unit.setShaderSet(UnitObject.SpriteShaderSets.ENEMY_NORMAL);
+
+            TibzLog.Debug("Enemy obj count: {0}", enemyUnits.Count);
+        }
+        public void AddNpcUnit(UnitObject unitRef, int xpos, int ypos) 
+        {
+
+            UnitObject unit = new UnitObject(unitRef);
+            unit.xPos = xpos;
+            unit.yPos = ypos;
+
+            if (unit.isUnique == true)
+            {
+                //check then replace
+                for (int i = 0; i < npcUnits.Count; i++)
+                {
+                    if (npcUnits[i].id == unit.id)
+                    {
+                        enemyUnits[i] = unit;
+                        return; // dont add
+                    }
+                }
+                npcUnits.Add(unit); // else add
+            }
+            else
+            {
+                npcUnits.Add(unit);
+            }
+            unit.InitSprite(_screenManager);
+            unit.setShaderSet(UnitObject.SpriteShaderSets.NPC_NORMAL);
+            TibzLog.Debug("NPC obj count: {0}", npcUnits.Count);
+
         }
     }
 }
