@@ -12,6 +12,7 @@ using TibzGame.Core.ScreenManager;
 using Johnmagotchi.GameContent.Objects;
 using System.Text.Json;
 using Johnmagotchi.GameContent.Units;
+using Johnmagotchi.GameContent.Objects.UI;
 
 namespace Johnmagotchi.Screen.BattleMapScreens
 {
@@ -21,6 +22,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         protected BattleMap CurrentMap;
 
         public MapCursor MapCursor;
+        public UnitDisplay UnitDisplay;
 
         protected int cursorIndexX;
 
@@ -45,7 +47,6 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
         public Boolean ScreenScrollLock = false;
 
-
         public abstract void ChildInit();
         public abstract void ChildUpdate();
         public abstract void ChildDraw();
@@ -54,6 +55,8 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         public BaseMapScreen(){
             this.CurrentMap = new BattleMap(24,20);
             this.MapCursor = new MapCursor();
+            this.UnitDisplay = new UnitDisplay();
+
             saveCurrentMap();
         }
         public BaseMapScreen(BattleMap existingMap){
@@ -73,6 +76,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             SpriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
             this.CurrentMap.Init(screenManager);
             this.MapCursor.Init(screenManager);
+            this.UnitDisplay.Init(screenManager);
 
             ChildInit();
         }
@@ -105,8 +109,18 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
             // units
             this.CurrentMap.DrawUnits(scrollOffsetX, scrollOffsetY);// should draw background
-            // ui overlay 
+
+
+        
+            // Call child draw classes
             ChildDraw();
+
+            // anthing that has priorty top layer should go here
+
+            // ui overlay 
+            UnitDisplay.Draw(CursorQuadrant);
+
+
         }
 
         public override void Update()
@@ -184,6 +198,9 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
         // update battle map
             CurrentMap.Update();
+
+            // update unit display
+            UnitDisplay.Update( CurrentMap.getUnitAtLocation(cursorIndexX, cursorIndexY));
 
         // End Update, call child
             ChildUpdate();

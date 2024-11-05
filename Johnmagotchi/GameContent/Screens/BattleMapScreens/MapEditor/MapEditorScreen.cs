@@ -52,7 +52,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             selectedUnitIndex = 0;
             UnitFaction = UnitFactionType.PLAYER;
             foreach (UnitObject unit in AvailableUnits) {
-                TibzLog.Debug(" Unit id: {0}, name: {1},  health: {2}, atk: {3}, def: {4}, spd {5}, unique: {6} ", unit.id, unit.name, unit.stats.health, unit.stats.attack, unit.stats.defense, unit.stats.speed , unit.isUnique);
+                TibzLog.Debug(" Unit id: {0}, name: {1},  health: {2}, atk: {3}, def: {4}, spd {5}, unique: {6} ", unit.id, unit.name, unit.stats.maxHealth, unit.stats.attack, unit.stats.defense, unit.stats.speed , unit.isUnique);
                 TibzLog.Debug(" INIT SPRITES HERE");
 
                 unit.InitSprite(screenManager);

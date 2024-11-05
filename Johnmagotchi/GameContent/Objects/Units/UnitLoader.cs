@@ -87,7 +87,7 @@ namespace Johnmagotchi.GameContent.Units
                         unit.id = Int32.Parse(values[IdIndex]);
                         unit.name = values[NameIndex];
                         unit.isUnique = ( values[isUniqueIndex].ToLower() == "true");
-                        unit.stats.health = Int32.Parse(values[HealthIndex]);
+                        unit.stats.maxHealth = Int32.Parse(values[HealthIndex]);
                         unit.stats.attack = Int32.Parse(values[AttackIndex]);
                         unit.stats.defense = Int32.Parse(values[DefenseIndex]);
                         unit.stats.speed = Int32.Parse(values[SpeedIndex]);

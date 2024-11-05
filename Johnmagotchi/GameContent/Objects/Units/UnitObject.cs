@@ -13,10 +13,12 @@ namespace Johnmagotchi.GameContent.Units
     public class UnitObject{
         public int id { get; set; }
         public string name { get; set; }
-        public UnitStatBlock stats;
+        public UnitStatBlock stats; // 
+        public int CurrentHealth;
         public int xPos;
         public int yPos;
         public bool isUnique;
+        public UnitTeam team;
         public SpriteShaderSets shaderSet;
 
         public Texture2D sprite;
@@ -24,6 +26,13 @@ namespace Johnmagotchi.GameContent.Units
         private ScreenManager _screenManager;
         private bool IsInit;
 
+
+        public enum UnitTeam
+        {
+            PLAYER,
+            ENEMY,
+            NPC
+        }
         public enum SpriteShaderSets { 
             PLAYER_NORMAL,
             ENEMY_NORMAL,
@@ -47,10 +56,34 @@ namespace Johnmagotchi.GameContent.Units
         public UnitObject(UnitObject template) {
             IsInit = false;
             CopyFromTemplate(template);
+            CurrentHealth = stats.maxHealth;
+        }
+
+        public UnitObject(string serializedData)
+        {
+            IsInit = false;
+            SetFromSerialized(serializedData);           
+        }
+
+        public string GetAsSerialized()
+        {
+
+            return "";
+        }
+
+        public void SetFromSerialized(string data)
+        {
+
+            return ;
         }
 
 
-        public void setShaderSet(SpriteShaderSets inSet) {
+        public void setTeam(UnitTeam team)
+        {
+            this.team = team;
+        }
+
+        public void SetShaderSet(SpriteShaderSets inSet) {
             shaderSet = inSet;
         }
 
@@ -147,7 +180,5 @@ namespace Johnmagotchi.GameContent.Units
             //    return "Units/unit-test";
 
         }
-
     }
-
 }

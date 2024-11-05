@@ -20,8 +20,11 @@ namespace Johnmagotchi.GameContent.Objects
         public int height{ get; set; }
 
         public string serializedMapTiles{ get; set; }
+        public string serializedPlayerUnits { get; set; }
+        public string serializedEnemyUnits{ get; set; }
+        public string serializedNpcUnits { get; set; }
 
-      
+
         private MapTile [,] MapTileGrid;
 
         private  List<UnitObject> playerUnits;
@@ -207,10 +210,22 @@ namespace Johnmagotchi.GameContent.Objects
               System.Console.WriteLine("Deserialition Completed!");
         }
 
+        public void SerializeUnitData() { 
+        
+        }
+        public void DeserializeUnitData() { 
+        }
+
         public void AddPlayerUnit(UnitObject unitRef, int xpos, int ypos)
         {
-            UnitObject unit = new UnitObject(unitRef);
+            if (! CheckIfUnitCanBePlaced(unitRef, xpos, ypos))
+            {
+                return;
+            }
 
+            UnitObject unit = new UnitObject(unitRef);
+            unit.setTeam(UnitObject.UnitTeam.PLAYER);
+            unit.SetShaderSet(UnitObject.SpriteShaderSets.PLAYER_NORMAL);
             unit.xPos = xpos;
             unit.yPos = ypos;
             if (unit.isUnique == true)
@@ -233,12 +248,16 @@ namespace Johnmagotchi.GameContent.Objects
             }
 
             unit.InitSprite(_screenManager);
-            unit.setShaderSet(UnitObject.SpriteShaderSets.PLAYER_NORMAL);
         }
         public void AddEnemyUnit(UnitObject unitRef, int xpos, int ypos)
         {
-
+            if (!CheckIfUnitCanBePlaced(unitRef, xpos, ypos))
+            {
+                return;
+            }      
             UnitObject unit = new UnitObject(unitRef);
+            unit.setTeam(UnitObject.UnitTeam.ENEMY);
+            unit.SetShaderSet(UnitObject.SpriteShaderSets.ENEMY_NORMAL);
             unit.xPos = xpos;
             unit.yPos = ypos;
             if (unit.isUnique == true)
@@ -263,14 +282,20 @@ namespace Johnmagotchi.GameContent.Objects
                 enemyUnits.Add(unit);
             }
             unit.InitSprite(_screenManager);
-            unit.setShaderSet(UnitObject.SpriteShaderSets.ENEMY_NORMAL);
-
+            
             TibzLog.Debug("Enemy obj count: {0}", enemyUnits.Count);
         }
         public void AddNpcUnit(UnitObject unitRef, int xpos, int ypos) 
         {
 
+            if (!CheckIfUnitCanBePlaced(unitRef, xpos, ypos))
+            {
+                return;
+            }
+
             UnitObject unit = new UnitObject(unitRef);
+            unit.setTeam(UnitObject.UnitTeam.NPC);
+            unit.SetShaderSet(UnitObject.SpriteShaderSets.NPC_NORMAL);
             unit.xPos = xpos;
             unit.yPos = ypos;
 
@@ -292,9 +317,63 @@ namespace Johnmagotchi.GameContent.Objects
                 npcUnits.Add(unit);
             }
             unit.InitSprite(_screenManager);
-            unit.setShaderSet(UnitObject.SpriteShaderSets.NPC_NORMAL);
+
             TibzLog.Debug("NPC obj count: {0}", npcUnits.Count);
 
+        }
+
+        private bool CheckIfUnitCanBePlaced(UnitObject unit, int x, int y) {
+
+            if (MapTileGrid[x,y].Type == TileType.SEA ) {  // add a && unit.Traversal type or whatever, so we check if this unit CAN stand on said tile.
+                return false;
+            }
+            // else delete existing units if they overlap then return true
+
+            return true;
+        }
+
+
+        public bool CheckIfAnyUnits(int x, int y) {
+            return CheckIfPlayerUnits(x, y) || CheckIfEnemyUnits(x,y)|| CheckIfNpcUnits(x,y) ;
+        }
+        public bool CheckIfPlayerUnits(int CursorX, int CursorY)
+        {
+            foreach (UnitObject Unit in playerUnits) {
+                if (Unit.xPos == CursorX && Unit.yPos == CursorY) { return true; }
+            }
+            return false;
+        }
+        public bool CheckIfEnemyUnits(int CursorX, int CursorY)
+        {
+            foreach (UnitObject Unit in enemyUnits)
+            {
+                if (Unit.xPos == CursorX && Unit.yPos == CursorY) { return true; }
+            }
+            return false;
+        }
+        public bool CheckIfNpcUnits(int CursorX, int CursorY)
+        {
+            foreach (UnitObject Unit in npcUnits)
+            {
+                if (Unit.xPos == CursorX && Unit.yPos == CursorY) { return true; }
+            }
+            return false;
+        }
+        public UnitObject getUnitAtLocation(int CursorX, int CursorY) {
+
+            foreach (UnitObject Unit in playerUnits)
+            {
+                if (Unit.xPos == CursorX && Unit.yPos == CursorY) { return Unit; }
+            }
+            foreach (UnitObject Unit in enemyUnits)
+            {
+                if (Unit.xPos == CursorX && Unit.yPos == CursorY) { return Unit; }
+            }
+            foreach (UnitObject Unit in npcUnits)
+            {
+                if (Unit.xPos == CursorX && Unit.yPos == CursorY) { return Unit; }
+            }
+            return null;
         }
     }
 }
