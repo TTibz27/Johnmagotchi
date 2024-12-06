@@ -19,7 +19,18 @@ namespace Johnmagotchi.GameContent.Screens.Menu
             //Editor Tool Select
             EDITOR_TOOL_TERRAIN,
             EDITOR_TOOL_PLACE_UNIT,
-            EDITOR_TOOL_DELETE_UNIT
+            EDITOR_TOOL_DELETE_UNIT,
+            //Save Slot
+            SAVE_SLOT_0,
+            SAVE_SLOT_1,
+            SAVE_SLOT_2,
+            SAVE_SLOT_3,
+            SAVE_SLOT_4,
+            SAVE_SLOT_5,
+            SAVE_SLOT_6,
+            SAVE_SLOT_7,
+            SAVE_SLOT_8,
+            SAVE_SLOT_9,
         }
         public string OptionLabel;
         public MenuOptionType OptionType;
@@ -30,6 +41,7 @@ namespace Johnmagotchi.GameContent.Screens.Menu
         }
         public static string GetMenuString(MenuOptionType type) {
             switch (type) {
+                //Editor Menu
                 case MenuOptionType.CHOOSE_NEW_TOOL:
                     return "Tools";
                 case MenuOptionType.ENTER_BATTLE_SCREEN:
@@ -40,12 +52,27 @@ namespace Johnmagotchi.GameContent.Screens.Menu
                     return "Save";
                 case MenuOptionType.EXIT:
                     return "Exit";
+                //Editor tool select
                 case MenuOptionType.EDITOR_TOOL_TERRAIN:
                     return "Tiles";
                 case MenuOptionType.EDITOR_TOOL_PLACE_UNIT:
                     return "Units";
                 case MenuOptionType.EDITOR_TOOL_DELETE_UNIT:
                     return "Delete";
+                // Save Slots 
+                case MenuOptionType.SAVE_SLOT_0:
+                case MenuOptionType.SAVE_SLOT_1:
+                case MenuOptionType.SAVE_SLOT_2:
+                case MenuOptionType.SAVE_SLOT_3:
+                case MenuOptionType.SAVE_SLOT_4:
+                case MenuOptionType.SAVE_SLOT_5:
+                case MenuOptionType.SAVE_SLOT_6:
+                case MenuOptionType.SAVE_SLOT_7:
+                case MenuOptionType.SAVE_SLOT_8:
+                case MenuOptionType.SAVE_SLOT_9:
+                    return "Slot " + (type - MenuOptionType.SAVE_SLOT_0 ); 
+
+
                 default:
                     return "";
 

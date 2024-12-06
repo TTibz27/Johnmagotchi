@@ -13,6 +13,7 @@ using Johnmagotchi.GameContent.Objects;
 using System.Text.Json;
 using Johnmagotchi.GameContent.Units;
 using Johnmagotchi.GameContent.Objects.UI;
+using Johnmagotchi.Core.tools;
 
 namespace Johnmagotchi.Screen.BattleMapScreens
 {
@@ -43,9 +44,11 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         private int scrollTimer ; // frames until click to next 
         private int scrollTotalDuration;
 
-        private string tempSave;
+        protected string tempSave;
 
-        public Boolean ScreenScrollLock = false;
+        public bool ScreenScrollLock = false;
+
+        private bool IsNewMap = true;
 
         public abstract void ChildInit();
         public abstract void ChildUpdate();
@@ -56,12 +59,18 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             this.CurrentMap = new BattleMap(24,20);
             this.MapCursor = new MapCursor();
             this.UnitDisplay = new UnitDisplay();
+            this.isDrawPriority = true;
+            this.isUpdatePriority = true;
 
             saveCurrentMap();
         }
         public BaseMapScreen(BattleMap existingMap){
-            this.MapCursor = new MapCursor();
             this.CurrentMap = existingMap;
+            this.MapCursor = new MapCursor();
+            this.UnitDisplay = new UnitDisplay();
+            this.isDrawPriority = true;
+            this.isUpdatePriority = true;
+            this.IsNewMap = false;
         }
 
         public override void Init()
@@ -74,9 +83,17 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             scrollOffsetY=0;
 
             SpriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
-            this.CurrentMap.Init(screenManager);
+          
             this.MapCursor.Init(screenManager);
             this.UnitDisplay.Init(screenManager);
+            if (this.IsNewMap)
+            {
+                this.CurrentMap.Init(screenManager);
+            }
+            else
+            {
+                this.CurrentMap.InitFromReload(ScreenManager);
+            }
 
             ChildInit();
         }
@@ -88,7 +105,6 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
         public override void Draw()
         {
-        
            // bool stopXScroll = false;
             //bool stopYScroll = false;
             if ((this.CurrentMap.width * MapTile.TILE_WIDTH_PX) < this.ScreenManager.GetScaledPixelScreenWidth()) { // center width
@@ -289,8 +305,6 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             int totalHeightTiles = this.screenManager.GetScaledPixelScreenHeight() / MapTile.TILE_HEIGHT_PX;
             int tilesFromTop =  cursorIndexY - currentOffsetTilesY;
             //System.Console.WriteLine("Scroll offset px: {0}", scrollOffsetY);
-            System.Console.WriteLine("Scroll offset tiles: {0}", currentOffsetTilesY);
-            System.Console.WriteLine("Tiles from top: {0}", tilesFromTop);
             if (  tilesFromTop < SCROLL_TILES_FROM_EDGE_Y){
                 scrollOffsetY += MapTile.TILE_HEIGHT_PX; // scroll up
             }
@@ -305,9 +319,6 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             int totalHeightTiles = this.screenManager.GetScaledPixelScreenHeight() / MapTile.TILE_HEIGHT_PX;
             int tilesFromTop =  cursorIndexY - currentOffsetTilesY;
            // System.Console.WriteLine("Scroll offset px: {0}", scrollOffsetY);
-               System.Console.WriteLine("Scroll offset tiles: {0}", currentOffsetTilesY);
-              System.Console.WriteLine("Tiles from top: {0}", tilesFromTop);
-
            
             if ( tilesFromTop >  totalHeightTiles  - SCROLL_TILES_FROM_EDGE_Y){
                 scrollOffsetY -= MapTile.TILE_HEIGHT_PX; // scroll up
@@ -321,11 +332,13 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
 
 
-        public void saveCurrentMap(){  
+        public string saveCurrentMap(){  
             System.Console.WriteLine("Saving....");
-            CurrentMap.serializeMapTiles();
+            CurrentMap.SerializeAll();
+            
             tempSave = JsonSerializer.Serialize(CurrentMap);
-          // System.Console.WriteLine("save json: {0}", tempSave);
+            // System.Console.WriteLine("save json: {0}", tempSave);
+            return tempSave;
         }
 
         public void loadCurrentMap(){
@@ -334,6 +347,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 this.CurrentMap = JsonSerializer.Deserialize<BattleMap>(tempSave);
                 this.CurrentMap.InitFromReload(screenManager);
                 this.CurrentMap.deserializeMapTiles();
+                this.CurrentMap.DeserializeUnitData();
             }
              else{
                   System.Console.WriteLine("valid save state not found");

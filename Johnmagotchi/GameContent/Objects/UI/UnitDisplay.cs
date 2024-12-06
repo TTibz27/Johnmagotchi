@@ -52,6 +52,7 @@ namespace Johnmagotchi.GameContent.Objects.UI
             else {
                 showDisplay = true;
                 HighlightedUnit = unit;
+                TibzLog.Debug("HP on unit: " + unit.CurrentHealth);
             }
         }
 
@@ -96,14 +97,12 @@ namespace Johnmagotchi.GameContent.Objects.UI
         }
 
         public void DrawNameText(int x, int y) {
-            TibzLog.Debug("Drawing text at {0}, {1}", x, y);
             Vector2 textRotationOrigin = new Vector2(0, 0);
              //Vector2 textRotationOrigin = kemco.MeasureString(HighlightedUnit.name);
              //textRotationOrigin.X = textRotationOrigin.X / 2;
 
              x = _screenManager.getScaledIntX(x);
             y = _screenManager.getScaledIntX(y);
-            TibzLog.Debug("adjusted text at {0}, {1}", x, y);
             Vector2 position = new Vector2(x, y);
 
             spriteBatch.Begin();
@@ -130,7 +129,6 @@ namespace Johnmagotchi.GameContent.Objects.UI
         }
         public void DrawHPText(int x, int y)
         {
-            TibzLog.Debug("Drawing text at {0}, {1}", x, y);
             String DisplayString = "";
 
             DisplayString += HighlightedUnit.CurrentHealth + " HP  - " + HighlightedUnit.stats.maxHealth + " MAX";
@@ -140,7 +138,6 @@ namespace Johnmagotchi.GameContent.Objects.UI
 
             x = _screenManager.getScaledIntX(x);
             y = _screenManager.getScaledIntX(y);
-            TibzLog.Debug("adjusted text at {0}, {1}", x, y);
             Vector2 position = new Vector2(x, y);
 
             spriteBatch.Begin();

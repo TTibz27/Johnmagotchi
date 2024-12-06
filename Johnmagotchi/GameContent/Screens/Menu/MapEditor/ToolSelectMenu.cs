@@ -11,7 +11,7 @@ namespace Johnmagotchi.GameContent.Screens.Menu.MapEditor
     internal class ToolSelectMenu : BaseMapMenu
     {
         private MapEditorMenu Parent;
-        public ToolSelectMenu(MapEditorMenu parent, int x, int y , int q): base(parent.mapEditor, x,y,q) {
+        public ToolSelectMenu(MapEditorMenu parent, int x, int y , int q): base(parent.MapEditorInstance, x,y,q) {
             Parent = parent;
             CurrentOptions = new MenuOption[3];
             CurrentOptions[0] = new MenuOption(MenuOption.MenuOptionType.EDITOR_TOOL_TERRAIN);
@@ -52,15 +52,15 @@ namespace Johnmagotchi.GameContent.Screens.Menu.MapEditor
                 if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.EDITOR_TOOL_TERRAIN)
                 {
                     //screenManager.addScreen(new BattleMapScreen(mapEditor.GetMap()));1
-                    Parent.mapEditor.UpdateEditorTool(MapEditorScreen.EditorToolType.TILE_EDIT);
+                    Parent.MapEditorInstance.UpdateEditorTool(MapEditorScreen.EditorToolType.TILE_EDIT);
                 }
                 if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.EDITOR_TOOL_PLACE_UNIT)
                 {
-                    Parent.mapEditor.UpdateEditorTool(MapEditorScreen.EditorToolType.UNIT_ADD);
+                    Parent.MapEditorInstance.UpdateEditorTool(MapEditorScreen.EditorToolType.UNIT_ADD);
                 }
                 if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.EDITOR_TOOL_DELETE_UNIT)
                 {
-                    Parent.mapEditor.UpdateEditorTool(MapEditorScreen.EditorToolType.UNIT_DELETE);
+                    Parent.MapEditorInstance.UpdateEditorTool(MapEditorScreen.EditorToolType.UNIT_DELETE);
                 }
             }
         }

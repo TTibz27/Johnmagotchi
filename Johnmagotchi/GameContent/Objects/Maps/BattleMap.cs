@@ -12,6 +12,7 @@ using Johnmagotchi.GameContent.Units;
 using Johnmagotchi.Core.tools;
 using System.Runtime.ExceptionServices;
 
+
 namespace Johnmagotchi.GameContent.Objects
 {
     public class BattleMap
@@ -117,7 +118,6 @@ namespace Johnmagotchi.GameContent.Objects
                     int xLocation = (x * MapTile.TILE_WIDTH_PX) + xOffset;
                     int yLocation = (y * MapTile.TILE_HEIGHT_PX)+ yOffset;
                      MapTileGrid[x,y].DrawAt(xLocation, yLocation);
-                   // TibzLog.Debug("drawing tile XPos: {0} , YPos: {1}", xLocation, yLocation );
                 }
             }
 
@@ -194,7 +194,6 @@ namespace Johnmagotchi.GameContent.Objects
         }
 
         public void deserializeMapTiles(){
-            System.Console.WriteLine("Deserializing Map Tiles...");
             MapTileGrid = new  MapTile[width,height];
              List<string> serializedRows = JsonSerializer.Deserialize<List<string>>(serializedMapTiles);
              for (int row= 0; row < serializedRows.Count; row++){
@@ -209,11 +208,67 @@ namespace Johnmagotchi.GameContent.Objects
            //  initArray();
               System.Console.WriteLine("Deserialition Completed!");
         }
-
-        public void SerializeUnitData() { 
-        
+        public void SerializeAll()
+        {
+            this.serializeMapTiles();
+            this.SerializeUnitData();
+            
         }
-        public void DeserializeUnitData() { 
+
+        public void SerializeUnitData() {
+            List<string> player = new List<string>();
+            List<string> enemy = new List<string>();
+            List<string> npc = new List<string>();
+
+            foreach (UnitObject unit in playerUnits) { 
+            player.Add(unit.GetAsSerialized());
+            }
+            foreach (UnitObject unit in enemyUnits) {
+                enemy.Add(unit.GetAsSerialized());
+            }
+            foreach (UnitObject unit in npcUnits)
+            {
+                npc.Add(unit.GetAsSerialized());
+            }
+            serializedPlayerUnits = JsonSerializer.Serialize(player);
+            serializedEnemyUnits = JsonSerializer.Serialize(enemy);
+            serializedNpcUnits = JsonSerializer.Serialize(npc);
+
+            TibzLog.Debug("P:" + player.Count + " E:" + enemy.Count + " N:" + npc.Count);
+
+        }
+        public void DeserializeUnitData() {
+            List<UnitObject> OutPlayerUnits = new List<UnitObject>();
+            List<UnitObject> OutEnemyUnits = new List<UnitObject>();
+            List<UnitObject> OutNpcUnits = new List<UnitObject>();
+
+            List<string> players = JsonSerializer.Deserialize<List<string>>(serializedPlayerUnits);
+            List<string> enemies = JsonSerializer.Deserialize<List<string>>(serializedEnemyUnits);
+            List<string> npcs = JsonSerializer.Deserialize<List<string>>(serializedNpcUnits);
+
+            foreach(string entry in players) {
+                UnitObject newUnit = new UnitObject(entry);
+                OutPlayerUnits.Add(newUnit); // makes new instance from serialized string
+                newUnit.InitSprite(_screenManager, UnitObject.UnitTeam.PLAYER); 
+            }
+            foreach (string entry in enemies)
+            {
+                UnitObject newUnit = new UnitObject(entry);
+                OutEnemyUnits.Add(newUnit); // makes new instance from serialized string
+                newUnit.InitSprite(_screenManager, UnitObject.UnitTeam.ENEMY);
+            }
+            foreach (string entry in npcs)
+            {
+                UnitObject newUnit = new UnitObject(entry);
+                OutNpcUnits.Add(newUnit); // makes new instance from serialized string
+                newUnit.InitSprite(_screenManager,UnitObject.UnitTeam.NPC);
+            }
+
+            playerUnits = OutPlayerUnits;
+            enemyUnits = OutEnemyUnits;
+            npcUnits = OutNpcUnits;
+
+            TibzLog.Debug("P:" + playerUnits.Count + " E:" + enemyUnits.Count + " N:" + npcUnits.Count);
         }
 
         public void AddPlayerUnit(UnitObject unitRef, int xpos, int ypos)
@@ -224,7 +279,6 @@ namespace Johnmagotchi.GameContent.Objects
             }
 
             UnitObject unit = new UnitObject(unitRef);
-            unit.setTeam(UnitObject.UnitTeam.PLAYER);
             unit.SetShaderSet(UnitObject.SpriteShaderSets.PLAYER_NORMAL);
             unit.xPos = xpos;
             unit.yPos = ypos;
@@ -244,10 +298,9 @@ namespace Johnmagotchi.GameContent.Objects
             }
             else {
                 playerUnits.Add(unit);
-                TibzLog.Debug(playerUnits.Count);
             }
 
-            unit.InitSprite(_screenManager);
+            unit.InitSprite(_screenManager, UnitObject.UnitTeam.PLAYER);
         }
         public void AddEnemyUnit(UnitObject unitRef, int xpos, int ypos)
         {
@@ -256,7 +309,7 @@ namespace Johnmagotchi.GameContent.Objects
                 return;
             }      
             UnitObject unit = new UnitObject(unitRef);
-            unit.setTeam(UnitObject.UnitTeam.ENEMY);
+        
             unit.SetShaderSet(UnitObject.SpriteShaderSets.ENEMY_NORMAL);
             unit.xPos = xpos;
             unit.yPos = ypos;
@@ -267,24 +320,20 @@ namespace Johnmagotchi.GameContent.Objects
                 {
                     if (enemyUnits[i].id == unit.id)
                     {
-                        TibzLog.Debug("updating existing unique unit -  x:{0}, y: {1}", unit.xPos, unit.yPos);
                         enemyUnits[i].xPos = xpos;
                         enemyUnits[i].yPos = ypos;
                         return; // dont add
                     }
                 }
-                TibzLog.Debug("adding new unique unit -  x:{0}, y: {1}", unit.xPos, unit.yPos);
                 enemyUnits.Add(unit); // else add
             }
             else
             {
-                TibzLog.Debug("adding new non-unique unit -  x:{0}, y: {1}", unit.xPos, unit.yPos);
                 enemyUnits.Add(unit);
             }
-            unit.InitSprite(_screenManager);
-            
-            TibzLog.Debug("Enemy obj count: {0}", enemyUnits.Count);
+            unit.InitSprite(_screenManager, UnitObject.UnitTeam.ENEMY);
         }
+
         public void AddNpcUnit(UnitObject unitRef, int xpos, int ypos) 
         {
 
@@ -293,8 +342,7 @@ namespace Johnmagotchi.GameContent.Objects
                 return;
             }
 
-            UnitObject unit = new UnitObject(unitRef);
-            unit.setTeam(UnitObject.UnitTeam.NPC);
+            UnitObject unit = new UnitObject(unitRef);  
             unit.SetShaderSet(UnitObject.SpriteShaderSets.NPC_NORMAL);
             unit.xPos = xpos;
             unit.yPos = ypos;
@@ -316,7 +364,7 @@ namespace Johnmagotchi.GameContent.Objects
             {
                 npcUnits.Add(unit);
             }
-            unit.InitSprite(_screenManager);
+            unit.InitSprite(_screenManager, UnitObject.UnitTeam.NPC);
 
             TibzLog.Debug("NPC obj count: {0}", npcUnits.Count);
 

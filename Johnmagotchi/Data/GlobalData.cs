@@ -7,12 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using TibzGame.Core.ScreenManager;
 
-namespace Johnmagotchi.GameContent
+namespace Johnmagotchi.Data
 {
     public class GlobalData
     {
         ScreenManager screenManager;
-        public GlobalData(ScreenManager sm) {
+        public GlobalData(ScreenManager sm)
+        {
             screenManager = sm;
         }
     }

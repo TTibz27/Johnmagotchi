@@ -28,8 +28,6 @@ namespace Johnmagotchi.GameContent.Units
 
                     listA.Add(values[0]);
                     listB.Add(values[1]);
-
-                    TibzLog.Debug("Values: {0} , {1}", values[0], values[1]);
         
                 }
             }
@@ -39,7 +37,7 @@ namespace Johnmagotchi.GameContent.Units
         public static List<UnitObject> LoadBaseUnits(){
             List<UnitObject> unitList = new List<UnitObject>();
             System.Console.WriteLine("PATH: {0}", Directory.GetCurrentDirectory());
-            var path = "..\\..\\..\\GameContent\\Data\\BaseUnitData.csv";
+            var path = "..\\..\\..\\Data\\BaseUnitData.csv";
             List<string> listA = new List<string>();
             List<string> listB = new List<string>();
             System.Console.WriteLine("path: {0} ", path);
@@ -112,7 +110,6 @@ namespace Johnmagotchi.GameContent.Units
                     }             
                 }
             }
-            TibzLog.Debug("return list {0}", unitList.Count);
             return unitList;
         }
     }

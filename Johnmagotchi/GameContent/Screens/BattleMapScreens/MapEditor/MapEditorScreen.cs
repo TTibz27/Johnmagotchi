@@ -4,6 +4,10 @@ using  Johnmagotchi.GameContent.Units;
 using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent.Screens.Menu;
 using Johnmagotchi.GameContent.Screens.BattleMapScreens.MapEditor;
+using Microsoft.VisualBasic;
+using static System.Net.Mime.MediaTypeNames;
+using System.IO;
+using System;
 
 namespace Johnmagotchi.Screen.BattleMapScreens
 {
@@ -21,7 +25,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             ENEMY,
             NPC
         }
-
+        private readonly bool AUTOLOAD_SLOT_0 = true;
         private TileType selectedTileType;
         private int selectedUnitIndex;
         private EditorToolType CurrentTool;
@@ -52,11 +56,14 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             selectedUnitIndex = 0;
             UnitFaction = UnitFactionType.PLAYER;
             foreach (UnitObject unit in AvailableUnits) {
-                TibzLog.Debug(" Unit id: {0}, name: {1},  health: {2}, atk: {3}, def: {4}, spd {5}, unique: {6} ", unit.id, unit.name, unit.stats.maxHealth, unit.stats.attack, unit.stats.defense, unit.stats.speed , unit.isUnique);
-                TibzLog.Debug(" INIT SPRITES HERE");
-
-                unit.InitSprite(screenManager);
+                TibzLog.Debug(" Unit id: {0}, name: {1},  health: {2}, atk: {3}, def: {4}, spd {5}, unique: {6} ",
+                    unit.id, unit.name, unit.stats.maxHealth, unit.stats.attack, unit.stats.defense,unit.stats.speed , unit.isUnique);
             }
+
+            if (AUTOLOAD_SLOT_0) { 
+                this.LoadMapAtSlot(0);
+            }
+
         }
         public override void ChildUpdate() {
             if (CurrentTool == EditorToolType.TILE_EDIT)
@@ -159,6 +166,49 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 InfoText.Draw(CursorQuadrant, 15, 60, "Current Faction : " + UnitFaction);
             }
         }
+
+        public void SaveMap() {
+            this.saveCurrentMap();
+        }
+        public void SaveMapAtSlot( int saveslot)
+        {
+            TibzLog.Debug("Save slot : " + saveslot);
+            // write to GameContent/Data/SaveMapData/Map-<slot>.json
+          var path = "..\\..\\..\\Data\\SaveMapData\\map-" +saveslot + ".json";
+            File.WriteAllText(path, this.saveCurrentMap());
+        }
+
+        public void LoadMapAtSlot(int saveslot) {
+            TibzLog.Debug("LoadMAp hit");
+            try
+            {
+                var path = "..\\..\\..\\Data\\SaveMapData\\map-" + saveslot + ".json";
+                //Pass the file path and file name to the StreamReader constructor
+                StreamReader sr = new StreamReader(path);
+                //We should only need to read the first line of text
+                string line = sr.ReadLine();
+                TibzLog.Debug(line);
+                this.tempSave = line;
+                this.loadCurrentMap();
+                //if needed we do this to continue to read until you reach end of file
+                //while (line != null)
+                //{
+                //    TibzLog.Debug(line);
+                //    //Read the next line
+                //    line = sr.ReadLine();
+                //}
+                //close the file
+                sr.Close();
+
+              
+                
+            }
+            catch (Exception e)
+            {
+                TibzLog.Debug("File Read Error: \n" + e);
+            }
+        }
     }
 }
 
+ 

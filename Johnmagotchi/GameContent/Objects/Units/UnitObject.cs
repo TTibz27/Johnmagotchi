@@ -1,11 +1,14 @@
 
 
 
+using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using TibzGame.Core.ScreenManager;
 
 namespace Johnmagotchi.GameContent.Units
@@ -13,12 +16,13 @@ namespace Johnmagotchi.GameContent.Units
     public class UnitObject{
         public int id { get; set; }
         public string name { get; set; }
-        public UnitStatBlock stats; // 
-        public int CurrentHealth;
-        public int xPos;
-        public int yPos;
-        public bool isUnique;
-        public UnitTeam team;
+        public UnitStatBlock stats { set; get; }
+        public int CurrentHealth { set; get; }
+        public int xPos { set; get; }
+        public int yPos { set; get; }
+
+        public bool isUnique { set; get; }
+        public UnitTeam team { set; get; }
         public SpriteShaderSets shaderSet;
 
         public Texture2D sprite;
@@ -62,18 +66,21 @@ namespace Johnmagotchi.GameContent.Units
         public UnitObject(string serializedData)
         {
             IsInit = false;
-            SetFromSerialized(serializedData);           
+            SetFromSerialized(serializedData);
+           
         }
 
         public string GetAsSerialized()
         {
-
-            return "";
+           return JsonSerializer.Serialize(this);
         }
 
         public void SetFromSerialized(string data)
         {
-
+           UnitObject temp = JsonSerializer.Deserialize<UnitObject>(data);
+            CopyFromTemplate(temp); // get base stats
+            CurrentHealth = temp.CurrentHealth;// Update current stats
+            TibzLog.Debug("HP on deserialized: " + temp.CurrentHealth);
             return ;
         }
 
@@ -81,17 +88,27 @@ namespace Johnmagotchi.GameContent.Units
         public void setTeam(UnitTeam team)
         {
             this.team = team;
+            this.ReinitSprite();
         }
 
         public void SetShaderSet(SpriteShaderSets inSet) {
             shaderSet = inSet;
         }
 
-        public void InitSprite(ScreenManager screenManager) {
+        public void InitSprite(ScreenManager screenManager, UnitTeam team) {
             _screenManager = screenManager;
             spriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
+            this.team = team;
             string path = getSpriteTexturePath();
             sprite = screenManager.contentRef.Load<Texture2D>(path);
+            IsInit = true;
+           
+        }
+        public void ReinitSprite()
+        {
+            spriteBatch = new SpriteBatch(_screenManager.GraphicsDevice);
+            string path = getSpriteTexturePath();
+            sprite = _screenManager.contentRef.Load<Texture2D>(path);
             IsInit = true;
         }
 
@@ -108,7 +125,7 @@ namespace Johnmagotchi.GameContent.Units
             this.xPos = template.xPos;
             this.yPos = template.yPos;
             this.isUnique = template.isUnique;
-            this.sprite = template.sprite;
+            //this.sprite = template.sprite;
         }
 
         public void DrawAt( int x, int y) {
@@ -143,21 +160,22 @@ namespace Johnmagotchi.GameContent.Units
            // return "Units/unit-test";
 
             // this is placeholder till we get more graphics
-            if (shaderSet == SpriteShaderSets.PLAYER_NORMAL)
+            if (team == UnitTeam.PLAYER)
             {
                 return "Units/unit-test";
             }
-            if (shaderSet == SpriteShaderSets.ENEMY_NORMAL)
+            if (team == UnitTeam.ENEMY)
             {
                 return "Units/unit-test-enemy";
             }
-            if (shaderSet == SpriteShaderSets.NPC_NORMAL)
+            if (team == UnitTeam.NPC)
             {
                 return "Units/unit-test-npc";
             }
 
             return "Units/unit-test";
 
+            // shader sets should also be handled, but probably not here.
 
             // TODO - This is how it should look when its done, grab srite by ID and add color for shaders via the enum
 

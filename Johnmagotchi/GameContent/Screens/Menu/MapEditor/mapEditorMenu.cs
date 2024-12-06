@@ -16,16 +16,17 @@ using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent.Screens.Menu;
 using Johnmagotchi.Screen.BattleMapScreens;
 using Johnmagotchi.GameContent.Screens.Menu.MapEditor;
+using System.Windows.Forms;
 
 namespace Johnmagotchi.GameContent.Screens.Menu
 {
     public class MapEditorMenu : BaseMapMenu
     {
-        public MapEditorScreen mapEditor;
+        public MapEditorScreen MapEditorInstance;
 
         public MapEditorMenu(MapEditorScreen parentScreen, int x, int y, int screenQuadrant) : base (parentScreen, x ,y ,screenQuadrant)
         {
-            mapEditor = parentScreen;
+            MapEditorInstance = parentScreen;
             CurrentOptions = new MenuOption[5];
             CurrentOptions[0] = new MenuOption(MenuOption.MenuOptionType.CHOOSE_NEW_TOOL);
             CurrentOptions[1] = new MenuOption(MenuOption.MenuOptionType.IMPORT_MAP);
@@ -57,46 +58,67 @@ namespace Johnmagotchi.GameContent.Screens.Menu
 
         public override void ChildInit()
         {
+       
         }
         public override void ChildUpdate()
         {
             if (screenManager.inputs.editorInputs.confirm.isJustPressed)
             {
                 TibzLog.Debug("Menu Selected Option Type :{0}", CurrentOptions[SelectedIndex]);
-               
+                int subX = xPos;
+                int subY = yPos;
+                if (screenQuadrant == 1)
+                {
+                    subX -= 800;
+                    subY += 800;
+                }
+                else if (screenQuadrant == 2)
+                {
+                    subX += 800;
+                    subY += 800;
+                }
+                else if (screenQuadrant == 3)
+                {
+                    subX += 800;
+                    subY -= ((CurrentOptions.Length - 3) * 2800) - 800;
+                }
+                else
+                {
+                    subX -= 800;
+                    subY -= ((CurrentOptions.Length - 3) * 2800) - 800;
+
+                }
+
                 if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.ENTER_BATTLE_SCREEN)
                 {
-                    screenManager.removeTopScreens(1); // remove this screen
-                    screenManager.addScreen(new BattleMapScreen(mapEditor.GetMap()));
+                    //    screenManager.removeTopScreens(1); // remove this screen
+                    MapEditorInstance.SaveMap();
+                    screenManager.addScreen(new BattleMapScreen(MapEditorInstance.GetMap()));
                 }
                 if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.CHOOSE_NEW_TOOL)
                 {
-                    int subX = xPos;
-                    int subY = yPos;
-                    if (screenQuadrant == 1) 
-                    {
-                        subX -= 800;
-                        subY += 800;
-                    }
-                    else if (screenQuadrant == 2)
-                    {
-                        subX += 800;
-                        subY += 800;
-                    }
-                    else if (screenQuadrant == 3)
-                    {
-                        subX += 800;
-                        subY -= ((CurrentOptions.Length - 3) * 2800) - 800;
-                    }
-                    else
-                    {
-                        subX -= 800;
-                        subY -= ((CurrentOptions.Length - 3) * 2800) - 800;
-
-                    }
+           
                     screenManager.addScreen(new ToolSelectMenu(this, subX,subY, screenQuadrant));
                 }
+                if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.EXPORT_MAP) {
+                    screenManager.addScreen(new SaveSlotSelect(this, subX, subY, screenQuadrant, SaveSlotSelected));
+                    // this would use the windows API to save, for now I am just going to use save slots bc I dont want to deal with it needing to be single threaded
+                    //SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                    //saveFileDialog1.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
+                    //saveFileDialog1.Title = "Save an Image File";
+                    //saveFileDialog1.ShowDialog();
+                }
+                if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.IMPORT_MAP)
+                {
+                    screenManager.addScreen(new SaveSlotSelect(this, subX, subY, screenQuadrant, LoadSlotSelected));              
+                }
             }
+        }
+        public void SaveSlotSelected(int slot) {
+            MapEditorInstance.SaveMapAtSlot(slot);        
+        }
+        public void LoadSlotSelected(int slot) {        
+            MapEditorInstance.LoadMapAtSlot(slot);   
         }
     }
 }
