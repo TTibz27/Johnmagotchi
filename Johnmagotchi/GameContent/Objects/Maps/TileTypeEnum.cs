@@ -16,3 +16,10 @@ public enum TileSubType{
     SNOW,
     DAMAGED
 }
+
+public enum TileHighlight {
+    NONE,
+    MOVEMENT,
+    ATTACK,
+    HEAL,
+}

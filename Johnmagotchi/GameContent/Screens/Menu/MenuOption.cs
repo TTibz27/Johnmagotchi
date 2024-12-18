@@ -31,6 +31,10 @@ namespace Johnmagotchi.GameContent.Screens.Menu
             SAVE_SLOT_7,
             SAVE_SLOT_8,
             SAVE_SLOT_9,
+            //Battle Menu
+            DEBUG_RETURN_TO_EDITOR
+
+            // Unit End Movement
         }
         public string OptionLabel;
         public MenuOptionType OptionType;
@@ -70,7 +74,9 @@ namespace Johnmagotchi.GameContent.Screens.Menu
                 case MenuOptionType.SAVE_SLOT_7:
                 case MenuOptionType.SAVE_SLOT_8:
                 case MenuOptionType.SAVE_SLOT_9:
-                    return "Slot " + (type - MenuOptionType.SAVE_SLOT_0 ); 
+                    return "Slot " + (type - MenuOptionType.SAVE_SLOT_0 );
+                case MenuOptionType.DEBUG_RETURN_TO_EDITOR:
+                    return "Editor";
 
 
                 default:

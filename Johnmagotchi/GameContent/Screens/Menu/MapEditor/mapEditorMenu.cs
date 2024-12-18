@@ -17,6 +17,7 @@ using Johnmagotchi.GameContent.Screens.Menu;
 using Johnmagotchi.Screen.BattleMapScreens;
 using Johnmagotchi.GameContent.Screens.Menu.MapEditor;
 using System.Windows.Forms;
+using Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen;
 
 namespace Johnmagotchi.GameContent.Screens.Menu
 {

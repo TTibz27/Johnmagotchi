@@ -72,7 +72,8 @@ namespace Johnmagotchi.GameContent.Objects
             _outlineTexture = _screenManager.contentRef.Load<Texture2D>("Map-UI/outline-32");
         }
 
-        public void Update() {
+        public void Update()
+        {
             foreach (UnitObject unit in playerUnits)
             {
                 unit.Update();
@@ -84,6 +85,14 @@ namespace Johnmagotchi.GameContent.Objects
             foreach (UnitObject unit in npcUnits)
             {
                 unit.Update();
+            }
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    MapTileGrid[x,y].Update();
+                }
             }
         }
 
@@ -423,5 +432,16 @@ namespace Johnmagotchi.GameContent.Objects
             }
             return null;
         }
+        public MapTile getTile(int x, int y) {
+            if (x < 0 || y < 0) return null;
+            if (x >= width || y >= height) return null;
+            return MapTileGrid[x, y];
+        }
+        public void ChangeTileHighlight(int x, int y, TileHighlight highlightType)
+        {
+            MapTileGrid[x, y].SetTileHighlight(highlightType);
+        }
+
+
     }
 }

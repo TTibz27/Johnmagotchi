@@ -52,7 +52,7 @@ namespace Johnmagotchi.GameContent.Objects.UI
             else {
                 showDisplay = true;
                 HighlightedUnit = unit;
-                TibzLog.Debug("HP on unit: " + unit.CurrentHealth);
+              
             }
         }
 

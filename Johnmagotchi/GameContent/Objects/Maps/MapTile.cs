@@ -31,10 +31,14 @@ namespace Johnmagotchi.GameContent.Objects
         public int shadowOffset;
         public bool facingLeft;
         public float spriteRotation;
-        public SpriteEffects currentSpriteEffects;  
+        public SpriteEffects currentSpriteEffects;
+        Texture2D HighlightTexture;
         Texture2D GrassTileTexture;
         Texture2D SeaTileTexture;
-
+        
+        public TileHighlight tileHighlight;
+        public int highlightTimer;
+        public int highlightTimerDelay;
 
         public Texture2D currentTexture;
         public MapTile()
@@ -47,9 +51,25 @@ namespace Johnmagotchi.GameContent.Objects
          
             _screenManager = screenManager;
             spriteBatch = new SpriteBatch(screenManager.GraphicsDevice);
+            HighlightTexture = screenManager.contentRef.Load<Texture2D>("Tiles/tile-highlight");
             GrassTileTexture = screenManager.contentRef.Load<Texture2D>("Tiles/Grass/grass-1");
             SeaTileTexture= screenManager.contentRef.Load<Texture2D>("Tiles/Sea/ocean");
             updateCurrentTexture();
+            tileHighlight = TileHighlight.NONE;
+            highlightTimer = 0;
+            highlightTimerDelay = 0;
+        }
+        public void Update() {
+            highlightTimerDelay++;
+            if (highlightTimerDelay > 2) {
+                highlightTimerDelay = 0;
+                highlightTimer++;
+            }
+            if (highlightTimer >= 16) { highlightTimer = 0; }
+
+            if (tileHighlight == TileHighlight.MOVEMENT) {
+             //   TibzLog.Debug("timer: " + highlightTimer);
+            }
         }
 
         public void ChangeType(TileType newType)
@@ -64,6 +84,11 @@ namespace Johnmagotchi.GameContent.Objects
             this.SouthNeighborType = TileType.NULL;
             this.WestNeighborType = TileType.NULL;
             this.EastNeighborType = TileType.NULL;
+        }
+
+        public void SetTileHighlight(TileHighlight newState)
+        {
+            this.tileHighlight = newState;
         }
 
         public void DrawAt(int posX, int posY)
@@ -84,6 +109,25 @@ namespace Johnmagotchi.GameContent.Objects
                 currentSpriteEffects, 1);
     
             spriteBatch.End();
+
+            // Draw Highlights
+
+            if (tileHighlight == TileHighlight.NONE)
+            {
+                return;
+            }
+            if (tileHighlight == TileHighlight.MOVEMENT)
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+                // all rectangles should do the scaling from world coordinates to screen coordinates
+                Rectangle highlightRect = _screenManager.GetScaledRectangle(posX, posY, TILE_WIDTH_PX, TILE_HEIGHT_PX);
+                Rectangle sourceRect = new Rectangle((40 * highlightTimer) + 1 ,1, 40, 40);
+                spriteBatch.Draw(
+                    HighlightTexture, highlightRect,  sourceRect, Color.White, 0, new Vector2(0, 0),
+                    currentSpriteEffects, 1);
+                spriteBatch.End();
+            }
+
         }
 
         private void updateCurrentTexture() {
