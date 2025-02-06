@@ -223,28 +223,28 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
         }
 
-        private void TickCursorLeft()
+        protected virtual void TickCursorLeft()
         {
             if (cursorIndexX > 0) cursorIndexX --;
             else cursorIndexX = 0;
                  // adjust screen after mouse movement
             tickLeftScroll();
         }
-        private void TickCursorRight()
+        protected virtual void TickCursorRight()
         {
             if (cursorIndexX < CurrentMap.width -1) cursorIndexX ++; // zero indexed so -1
             else cursorIndexX = CurrentMap.width -1;
                  // adjust screen after mouse movement
             tickRightScroll();
         }
-        private void TickCursorUp()
+        protected virtual void TickCursorUp()
         {
             if (cursorIndexY > 0) cursorIndexY --;
             else cursorIndexY = 0;
                  // adjust screen after mouse movement
              tickUpScroll();
         }
-        private void TickCursorDown()
+        protected virtual void TickCursorDown()
         {
             if (cursorIndexY < CurrentMap.height -1) cursorIndexY ++; // zero indexed so -1
             else cursorIndexY = CurrentMap.height -1;
@@ -261,7 +261,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
               
         }
 
-        private void tickLeftScroll(){
+        protected void tickLeftScroll(){
             if (ScreenScrollLock){ return; }
             int currentOffsetTilesX = - scrollOffsetX / MapTile.TILE_WIDTH_PX; // since the offset scrolling left is negative we need to invert this sign
             int currentOffsetTilesY = scrollOffsetY / MapTile.TILE_HEIGHT_PX;
@@ -279,7 +279,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 scrollOffsetX = 0;
             }
         }
-        private void tickRightScroll(){
+        protected void tickRightScroll(){
             if (ScreenScrollLock){ return; }
             int currentOffsetTilesX = - scrollOffsetX / MapTile.TILE_WIDTH_PX; // invert sign here
             int currentOffsetTilesY = scrollOffsetY / MapTile.TILE_HEIGHT_PX;
@@ -299,7 +299,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 scrollOffsetX =  -1* (CurrentMap.width * MapTile.TILE_WIDTH_PX - this.screenManager.GetScaledPixelScreenWidth());
             }
         }
-        private void tickUpScroll(){
+        protected void tickUpScroll(){
             if (ScreenScrollLock){ return; }
             int currentOffsetTilesY = - scrollOffsetY / MapTile.TILE_HEIGHT_PX;
             int totalHeightTiles = this.screenManager.GetScaledPixelScreenHeight() / MapTile.TILE_HEIGHT_PX;
@@ -313,7 +313,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 scrollOffsetY = 0;
             }
         }
-        private void tickDownScroll(){
+        protected void tickDownScroll(){
             if (ScreenScrollLock){ return; }
             int currentOffsetTilesY = - scrollOffsetY / MapTile.TILE_HEIGHT_PX;
             int totalHeightTiles = this.screenManager.GetScaledPixelScreenHeight() / MapTile.TILE_HEIGHT_PX;

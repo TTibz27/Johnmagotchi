@@ -21,9 +21,11 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
 {
     internal class BattleMapScreen : BaseMapScreen
     {
+        UnitObject selectedToMoveUnit;
+        private List<Tuple<int, int>> validMoves;
         public BattleMapScreen(BattleMap map) : base(map)
         {
-
+            selectedToMoveUnit = null;
         }
         public override void Destroy()
         {
@@ -33,7 +35,8 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
         public override void ChildInit()
         {
             TibzLog.Debug("Child init hit");
-            // throw new NotImplementedException();
+ 
+            
         }
 
         public override void ChildUpdate()
@@ -44,17 +47,39 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
             {
                 TibzLog.Debug("Select Pressed");
 
+            
+                UnitObject  newSelectedUnit = CurrentMap.getUnitAtLocation(cursorIndexX, cursorIndexY);
+                if (newSelectedUnit != null && selectedToMoveUnit == null)
+                {              
+                    selectedToMoveUnit = newSelectedUnit;
+                    validMoves = GetValidMoveCoordinates(selectedToMoveUnit, new Tuple<int, int>(cursorIndexX, cursorIndexY));
 
-                UnitObject selectedUnit = CurrentMap.getUnitAtLocation(cursorIndexX, cursorIndexY);
-                if (selectedUnit != null)
-                {
-                    List<Tuple<int, int>> vaildMoves =  GetValidMoveCoordinates(selectedUnit, new Tuple<int, int>(cursorIndexX, cursorIndexY));
-                    
-                    foreach (Tuple<int,int> tile in vaildMoves)
+                    foreach (Tuple<int, int> tile in validMoves)
                     {
-                        CurrentMap.ChangeTileHighlight(tile.Item1, tile.Item2, TileHighlight.MOVEMENT);                  
+                        CurrentMap.ChangeTileHighlight(tile.Item1, tile.Item2, TileHighlight.MOVEMENT);
                     }
 
+                }
+                else if (selectedToMoveUnit != null) // we are currently moving
+                {
+                    if (newSelectedUnit == null)
+                    { //  normal movement
+                        this.selectedToMoveUnit = null;
+                        if (validMoves != null)
+                        {
+                            foreach (Tuple<int, int> tile in validMoves)
+                            {
+                                CurrentMap.ChangeTileHighlight(tile.Item1, tile.Item2, TileHighlight.NONE);
+                            }
+                        }
+
+                    }
+                    else // new unit selected while attempting to move
+                    {
+
+
+                    }
+                 
                 }
                 else
                 {
@@ -69,7 +94,17 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
 
             if (screenManager.inputs.editorInputs.cancel.isJustPressed)
             {
-
+                if (selectedToMoveUnit != null)
+                {
+                    this.selectedToMoveUnit = null;
+                    if (validMoves != null)
+                    {
+                        foreach (Tuple<int, int> tile in validMoves)
+                        {
+                            CurrentMap.ChangeTileHighlight(tile.Item1, tile.Item2, TileHighlight.NONE);
+                        }
+                    }
+                }
             }
         }
 
@@ -90,6 +125,35 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
             rootNode.GetMoveLocations(MapMovementNode.ParentNodeLocation.ROOT,ref validTiles);
             
             return validTiles;      
+        }
+
+        protected override void TickCursorLeft()
+        {
+            if (cursorIndexX > 0) cursorIndexX--;
+            else cursorIndexX = 0;
+            // adjust screen after mouse movement
+            tickLeftScroll();
+        }
+        protected override void TickCursorRight()
+        {
+            if (cursorIndexX < CurrentMap.width - 1) cursorIndexX++; // zero indexed so -1
+            else cursorIndexX = CurrentMap.width - 1;
+            // adjust screen after mouse movement
+            tickRightScroll();
+        }
+        protected override void TickCursorUp()
+        {
+            if (cursorIndexY > 0) cursorIndexY--;
+            else cursorIndexY = 0;
+            // adjust screen after mouse movement
+            tickUpScroll();
+        }
+        protected override void TickCursorDown()
+        {
+            if (cursorIndexY < CurrentMap.height - 1) cursorIndexY++; // zero indexed so -1
+            else cursorIndexY = CurrentMap.height - 1;
+            // adjust screen after mouse movement
+            tickDownScroll();
         }
     }
 }
