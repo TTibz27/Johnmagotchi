@@ -37,6 +37,22 @@ namespace TibzGame.Core.Inputs
 
         }
 
+        public void ClearAllInputs() {
+
+            menuInputs.confirm.ClearButtonPresses();
+            menuInputs.cancel.ClearButtonPresses();
+            menuInputs.navUp.ClearButtonPresses();
+            menuInputs.navDown.ClearButtonPresses();
+            menuInputs.navLeft.ClearButtonPresses();
+            menuInputs.navRight.ClearButtonPresses();
+
+            menuInputs.special1.ClearButtonPresses();
+            menuInputs.special2.ClearButtonPresses();
+            menuInputs.special3.ClearButtonPresses();
+            menuInputs.special4.ClearButtonPresses();
+            menuInputs.special5.ClearButtonPresses();
+        }
+
     
         private void handleKeyboardInput(short playerindex) {
 

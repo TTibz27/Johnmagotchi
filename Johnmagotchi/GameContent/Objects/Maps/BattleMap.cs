@@ -379,6 +379,41 @@ namespace Johnmagotchi.GameContent.Objects
 
         }
 
+        public void deleteUnit(UnitObject unitRef) {
+
+            int removePlayerIndex = -1;
+            int removeEnemyIndex = -1;
+            int removeNpcIndex = -1;
+
+            for (int i = 0; i < playerUnits.Count; i++)
+            {
+                if (unitRef.internalID == playerUnits[i].internalID)
+                {
+                    removePlayerIndex = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < enemyUnits.Count; i++)
+            {
+                if (unitRef.internalID == enemyUnits[i].internalID)
+                {
+                    removeEnemyIndex = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < npcUnits.Count; i++)
+            {
+                if (unitRef.internalID == npcUnits[i].internalID)
+                {
+                    removeNpcIndex = i;
+                    break;
+                }
+            }
+            if (removePlayerIndex != -1) { playerUnits.RemoveAt(removePlayerIndex); }
+            if (removeEnemyIndex != -1) { enemyUnits.RemoveAt(removeEnemyIndex); }
+            if (removeNpcIndex != -1) { npcUnits.RemoveAt(removeNpcIndex); }
+        }
+
         private bool CheckIfUnitCanBePlaced(UnitObject unit, int x, int y) {
 
             if (MapTileGrid[x,y].Type == TileType.SEA ) {  // add a && unit.Traversal type or whatever, so we check if this unit CAN stand on said tile.
@@ -432,7 +467,28 @@ namespace Johnmagotchi.GameContent.Objects
             }
             return null;
         }
-        public MapTile getTile(int x, int y) {
+
+        public void moveUnit(UnitObject unitcopy, int x, int y)
+        {
+            foreach (UnitObject Unit in playerUnits)
+            {
+                if (Unit.internalID == unitcopy.internalID) 
+                {
+                   Unit.xPos = x;
+                   Unit.yPos = y;
+                }
+            }
+            foreach (UnitObject Unit in enemyUnits)
+            {
+                if (Unit.internalID == unitcopy.internalID) { }
+            }
+            foreach (UnitObject Unit in npcUnits)
+            {
+                if (Unit.internalID == unitcopy.internalID) { }
+            }
+        }
+
+            public MapTile getTile(int x, int y) {
             if (x < 0 || y < 0) return null;
             if (x >= width || y >= height) return null;
             return MapTileGrid[x, y];
@@ -442,6 +498,22 @@ namespace Johnmagotchi.GameContent.Objects
             MapTileGrid[x, y].SetTileHighlight(highlightType);
         }
 
+
+        public BattleMap GetClone() { 
+            BattleMap clone = new BattleMap(this.width, this.height);
+            clone.Init(this._screenManager);
+            this.SerializeAll();
+       
+            clone.serializedMapTiles = this.serializedMapTiles;
+            clone.deserializeMapTiles();
+
+            clone.serializedPlayerUnits = this.serializedPlayerUnits;
+            clone.serializedNpcUnits = this.serializedNpcUnits;
+            clone.serializedEnemyUnits = this.serializedEnemyUnits;
+            clone.DeserializeUnitData();
+
+            return clone;
+        }
 
     }
 }

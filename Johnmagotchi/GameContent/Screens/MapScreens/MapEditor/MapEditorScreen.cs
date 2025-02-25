@@ -20,7 +20,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             UNIT_ADD,
             UNIT_DELETE
         }
-        private enum UnitFactionType { 
+        private enum UnitFactionType {  // this could be replaced with the team enum in unit stats
             PLAYER,
             ENEMY,
             NPC
@@ -50,14 +50,13 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         public override void ChildInit()
         {
             InfoText.Init(screenManager);
-            selectedTileType = TileType.GRASS;
-            UnitLoader.GetTest();
+            selectedTileType = TileType.GRASS;         
             AvailableUnits = UnitLoader.LoadBaseUnits();
             selectedUnitIndex = 0;
             UnitFaction = UnitFactionType.PLAYER;
             foreach (UnitObject unit in AvailableUnits) {
-                TibzLog.Debug(" Unit id: {0}, name: {1},  health: {2}, atk: {3}, def: {4}, spd {5}, unique: {6} ",
-                    unit.id, unit.name, unit.stats.maxHealth, unit.stats.attack, unit.stats.defense,unit.stats.speed , unit.isUnique);
+                TibzLog.Debug(" Unit id: {0}, name: {1},  health: {2}, atk: {3}, def: {4}, spd {5}, unique: {6}, movementType {7} ",
+                    unit.id, unit.name, unit.stats.maxHealth, unit.stats.attack, unit.stats.defense,unit.stats.speed , unit.isUnique, unit.stats.movementType);
             }
 
             if (AUTOLOAD_SLOT_0) { 
@@ -133,8 +132,21 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                   //  CurrentMap.ChangeTileType(this.cursorIndexX, this.cursorIndexY, this.selectedTileType);
                 }
             }
- // ----------------------------------------------------------------------------------------------------------------------
+            // ----------------------------------------------------------------------------------------------------------------------
 
+            if (CurrentTool == EditorToolType.UNIT_DELETE)
+            {
+               
+                if (screenManager.inputs.editorInputs.confirm.isJustPressed)
+                {
+                    UnitObject deleteUnit =  CurrentMap.getUnitAtLocation(cursorIndexX, cursorIndexY);
+                    if (deleteUnit != null)
+                    {
+                        CurrentMap.deleteUnit(deleteUnit);
+                    }
+                }
+            }
+            // --------------------------------------------------------------------------------------------------------------------------
             if (screenManager.inputs.editorInputs.cancel.isJustPressed)
             {         
                 this.screenManager.addScreen(

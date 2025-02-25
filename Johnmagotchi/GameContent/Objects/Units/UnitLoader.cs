@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Johnmagotchi.Core.tools;
 using System.Collections;
 using System.Net.Http.Headers;
+using static Johnmagotchi.GameContent.Units.UnitStatBlock;
 
 namespace Johnmagotchi.GameContent.Units
 {
@@ -13,24 +14,24 @@ namespace Johnmagotchi.GameContent.Units
         public static List<string> GetTest(){
             // MAC OS also prly Linux -  var path = Path.Combine(Directory.GetCurrentDirectory(), "GameContent/Objects/Units/UnitDefines.csv");
 
-            System.Console.WriteLine("PATH: {0}", Directory.GetCurrentDirectory());
-            var path =  "..\\..\\..\\GameContent\\Objects\\Units\\UnitDefines.csv";
+            //System.Console.WriteLine("PATH: {0}", Directory.GetCurrentDirectory());
+            //var path =  "..\\..\\..\\GameContent\\Objects\\Units\\UnitDefines.csv";
             List<string> listA = new List<string>();
-            List<string> listB = new List<string>();
-            System.Console.WriteLine("path: {0} ", path);
-            using(var reader = new StreamReader(path))
-            {
+            //List<string> listB = new List<string>();
+            //System.Console.WriteLine("path: {0} ", path);
+            //using(var reader = new StreamReader(path))
+            //{
                
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
+            //    while (!reader.EndOfStream)
+            //    {
+            //        var line = reader.ReadLine();
+            //        var values = line.Split(',');
 
-                    listA.Add(values[0]);
-                    listB.Add(values[1]);
+            //        listA.Add(values[0]);
+            //        listB.Add(values[1]);
         
-                }
-            }
+            //    }
+            //}
             return listA;
         }
 
@@ -51,6 +52,7 @@ namespace Johnmagotchi.GameContent.Units
             int DefenseIndex = -1;
             int SpeedIndex = -1;
             int MovementIndex = -1;
+            int MovementTypeIndex = -1;
             
             bool AreColumnIndexesSet = false;
 
@@ -76,6 +78,8 @@ namespace Johnmagotchi.GameContent.Units
                             if (values[i].Trim() == "DEFENSE") { DefenseIndex = i; }
                             if (values[i].Trim() == "SPEED") { SpeedIndex = i; }
                             if (values[i].Trim() == "MOVEMENT") { MovementIndex = i; }
+                            if (values[i].Trim() == "MOVEMENT_TYPE") { MovementTypeIndex = i; }
+                            
 
                         }
                         AreColumnIndexesSet = true;
@@ -90,9 +94,11 @@ namespace Johnmagotchi.GameContent.Units
                         unit.stats.defense = Int32.Parse(values[DefenseIndex]);
                         unit.stats.speed = Int32.Parse(values[SpeedIndex]);
                         unit.stats.movement = Int32.Parse(values[MovementIndex]);
+                        unit.stats.setMovementTypeFromFile(values[MovementTypeIndex]);
 
 
-                        switch(unit.id){ 
+
+                        switch (unit.id){ 
                             case 0:
                                 // Add texture
                                 break;

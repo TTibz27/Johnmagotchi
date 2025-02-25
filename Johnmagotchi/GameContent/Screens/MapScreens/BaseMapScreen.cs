@@ -65,7 +65,9 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             saveCurrentMap();
         }
         public BaseMapScreen(BattleMap existingMap){
-            this.CurrentMap = existingMap;
+
+            this.CurrentMap = existingMap.GetClone();
+
             this.MapCursor = new MapCursor();
             this.UnitDisplay = new UnitDisplay();
             this.isDrawPriority = true;

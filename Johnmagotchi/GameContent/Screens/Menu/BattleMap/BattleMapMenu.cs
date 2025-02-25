@@ -15,12 +15,12 @@ namespace Johnmagotchi.GameContent.Screens.Menu.BattleMap
         public BattleMapMenu(BattleMapScreen parentScreen, int x, int y, int screenQuadrant) : base(parentScreen, x, y, screenQuadrant)
         {
             BattleMapInstance = parentScreen;
-            CurrentOptions = new MenuOption[5];
+            CurrentOptions = new MenuOption[4];
             CurrentOptions[0] = new MenuOption(MenuOption.MenuOptionType.DEBUG_RETURN_TO_EDITOR);
-            CurrentOptions[1] = new MenuOption(MenuOption.MenuOptionType.IMPORT_MAP);
+            CurrentOptions[1] = new MenuOption(MenuOption.MenuOptionType.END_TURN);
             CurrentOptions[2] = new MenuOption(MenuOption.MenuOptionType.EXPORT_MAP);
-            CurrentOptions[3] = new MenuOption(MenuOption.MenuOptionType.ENTER_BATTLE_SCREEN);
-            CurrentOptions[4] = new MenuOption(MenuOption.MenuOptionType.EXIT);
+          //  CurrentOptions[3] = new MenuOption(MenuOption.MenuOptionType.ENTER_BATTLE_SCREEN);
+            CurrentOptions[3] = new MenuOption(MenuOption.MenuOptionType.EXIT);
             if (screenQuadrant == 1)
             {
                 xDrawOffset = 7000;
@@ -80,9 +80,9 @@ namespace Johnmagotchi.GameContent.Screens.Menu.BattleMap
 
                 }
 
-                if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.ENTER_BATTLE_SCREEN)
+                if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.DEBUG_RETURN_TO_EDITOR)
                 {
-                    //    screenManager.removeTopScreens(1); // remove this screen
+                      screenManager.removeTopScreens(2); // remove this screen and base screen
                    // MapEditorInstance.SaveMap();
                  //   screenManager.addScreen(new BattleMapScreen(MapEditorInstance.GetMap()));
                 }
@@ -103,6 +103,9 @@ namespace Johnmagotchi.GameContent.Screens.Menu.BattleMap
                 if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.IMPORT_MAP)
                 {
                   //  screenManager.addScreen(new SaveSlotSelect(this, subX, subY, screenQuadrant, LoadSlotSelected));
+                }
+                if (CurrentOptions[SelectedIndex].OptionType == MenuOption.MenuOptionType.EXIT) {
+                    screenManager.removeTopScreens(1); // remove this screen 
                 }
             }
 

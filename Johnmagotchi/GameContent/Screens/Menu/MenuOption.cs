@@ -32,7 +32,12 @@ namespace Johnmagotchi.GameContent.Screens.Menu
             SAVE_SLOT_8,
             SAVE_SLOT_9,
             //Battle Menu
-            DEBUG_RETURN_TO_EDITOR
+            DEBUG_RETURN_TO_EDITOR,
+            END_TURN,
+            //After Movement Action Menu
+            ATTACK,
+            ITEM,
+            WAIT,
 
             // Unit End Movement
         }
@@ -78,6 +83,15 @@ namespace Johnmagotchi.GameContent.Screens.Menu
                 case MenuOptionType.DEBUG_RETURN_TO_EDITOR:
                     return "Editor";
 
+                case MenuOptionType.END_TURN:
+                    return "End Turn";
+
+                case MenuOptionType.ATTACK:
+                    return "Attack";
+                case MenuOptionType.ITEM:
+                    return "Items";
+                case MenuOptionType.WAIT:
+                    return "Wait";
 
                 default:
                     return "";

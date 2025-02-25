@@ -23,5 +23,14 @@ namespace TibzGame.Core.Inputs
             else  heldTime++;
            
         }
+
+        public void ClearButtonPresses()
+        {
+            isPressed = false;
+            isJustPressed = false;
+            isJustReleased = false;
+            heldTime = 0;
+        }
+    
     }
 }

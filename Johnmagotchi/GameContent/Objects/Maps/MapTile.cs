@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.Metadata;
 using Johnmagotchi.Core.tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -40,6 +41,8 @@ namespace Johnmagotchi.GameContent.Objects
         public int highlightTimer;
         public int highlightTimerDelay;
 
+        public Effect attackTileEffect;
+
         public Texture2D currentTexture;
         public MapTile()
         {
@@ -54,22 +57,14 @@ namespace Johnmagotchi.GameContent.Objects
             HighlightTexture = screenManager.contentRef.Load<Texture2D>("Tiles/tile-highlight");
             GrassTileTexture = screenManager.contentRef.Load<Texture2D>("Tiles/Grass/grass-1");
             SeaTileTexture= screenManager.contentRef.Load<Texture2D>("Tiles/Sea/ocean");
+            attackTileEffect = screenManager.contentRef.Load<Effect>("Shaders/Tiles/AttackTileShader");
             updateCurrentTexture();
             tileHighlight = TileHighlight.NONE;
             highlightTimer = 0;
             highlightTimerDelay = 0;
         }
         public void Update() {
-            highlightTimerDelay++;
-            if (highlightTimerDelay > 2) {
-                highlightTimerDelay = 0;
-                highlightTimer++;
-            }
-            if (highlightTimer >= 16) { highlightTimer = 0; }
-
-            if (tileHighlight == TileHighlight.MOVEMENT) {
-             //   TibzLog.Debug("timer: " + highlightTimer);
-            }
+        
         }
 
         public void ChangeType(TileType newType)
@@ -93,7 +88,16 @@ namespace Johnmagotchi.GameContent.Objects
 
         public void DrawAt(int posX, int posY)
         {
+            // Tick Draw Timers
+            highlightTimerDelay++;
+            if (highlightTimerDelay > 2)
+            {
+                highlightTimerDelay = 0;
+                highlightTimer++;
+            }
+            if (highlightTimer >= 16) { highlightTimer = 0; }
 
+            // Start Drawing
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // all rectangles should do the scaling from world coordinates to screen coordinates
@@ -119,11 +123,25 @@ namespace Johnmagotchi.GameContent.Objects
             if (tileHighlight == TileHighlight.MOVEMENT)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
                 // all rectangles should do the scaling from world coordinates to screen coordinates
                 Rectangle highlightRect = _screenManager.GetScaledRectangle(posX, posY, TILE_WIDTH_PX, TILE_HEIGHT_PX);
                 Rectangle sourceRect = new Rectangle((40 * highlightTimer) + 1 ,1, 40, 40);
                 spriteBatch.Draw(
                     HighlightTexture, highlightRect,  sourceRect, Color.White, 0, new Vector2(0, 0),
+                    currentSpriteEffects, 1);
+                spriteBatch.End();
+            }
+            if (tileHighlight == TileHighlight.ATTACK)
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
+                //apply shader
+                attackTileEffect.CurrentTechnique.Passes[0].Apply();
+                // all rectangles should do the scaling from world coordinates to screen coordinates
+                Rectangle highlightRect = _screenManager.GetScaledRectangle(posX, posY, TILE_WIDTH_PX, TILE_HEIGHT_PX);
+                Rectangle sourceRect = new Rectangle((40 * highlightTimer) + 1, 1, 40, 40);
+                spriteBatch.Draw(
+                    HighlightTexture, highlightRect, sourceRect, Color.White, 0, new Vector2(0, 0),
                     currentSpriteEffects, 1);
                 spriteBatch.End();
             }

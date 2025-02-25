@@ -14,18 +14,32 @@ using TibzGame.Core.ScreenManager;
 namespace Johnmagotchi.GameContent.Units
 {
     public class UnitObject{
-        public int id { get; set; }
+        //defined stats
+        public int internalID; // used to reference this object internally
+        public int id { get; set; } // used to reference this unit as "Byleth" or "Marth" or whatever, you know?
         public string name { get; set; }
         public UnitStatBlock stats { set; get; }
+        public bool isUnique { set; get; }
+        public UnitTeam team { set; get; }
+
+        // this needs to be expanded for attacks/ items eventually, does not need saved atm
+        public int DirectAttackRangeMin = 2;
+        public int DirectAttackRangeMax = 4;
+        public int IndirectAttackRangeMin;
+        public int IndirectAttackRangeMax;
+
+        // Stats for battle screens
         public int CurrentHealth { set; get; }
+        public bool isTurnOver { set; get; }
+        // public statusEnum sttatus {get;set;}
         public int xPos { set; get; }
         public int yPos { set; get; }
 
-        public bool isUnique { set; get; }
-        public UnitTeam team { set; get; }
+    //drawing and state management
         public SpriteShaderSets shaderSet;
-
         public Texture2D sprite;
+        private Effect TurnEndedEffect;
+
         private SpriteBatch spriteBatch;
         private ScreenManager _screenManager;
         private bool IsInit;
@@ -49,18 +63,22 @@ namespace Johnmagotchi.GameContent.Units
             xPos = 0;
             yPos = 0;
             stats = new UnitStatBlock();
+
         }
         public UnitObject(int x, int y){
             IsInit = false;
             xPos = x;
             yPos = y;
             stats = new UnitStatBlock();
+           
         }
 
         public UnitObject(UnitObject template) {
             IsInit = false;
             CopyFromTemplate(template);
             CurrentHealth = stats.maxHealth;
+            isTurnOver = false;
+
         }
 
         public UnitObject(string serializedData)
@@ -80,6 +98,7 @@ namespace Johnmagotchi.GameContent.Units
            UnitObject temp = JsonSerializer.Deserialize<UnitObject>(data);
             CopyFromTemplate(temp); // get base stats
             CurrentHealth = temp.CurrentHealth;// Update current stats
+            isTurnOver = temp.isTurnOver;
             TibzLog.Debug("HP on deserialized: " + temp.CurrentHealth);
             return ;
         }
@@ -101,9 +120,12 @@ namespace Johnmagotchi.GameContent.Units
             this.team = team;
             string path = getSpriteTexturePath();
             sprite = screenManager.contentRef.Load<Texture2D>(path);
+            this.internalID = screenManager.getUnitId();
+            TurnEndedEffect = screenManager.contentRef.Load<Effect>("Shaders/Units/UnitTurnEnded_S");
             IsInit = true;
            
         }
+     
         public void ReinitSprite()
         {
             spriteBatch = new SpriteBatch(_screenManager.GraphicsDevice);
@@ -125,6 +147,7 @@ namespace Johnmagotchi.GameContent.Units
             this.xPos = template.xPos;
             this.yPos = template.yPos;
             this.isUnique = template.isUnique;
+           
             //this.sprite = template.sprite;
         }
 
@@ -132,13 +155,18 @@ namespace Johnmagotchi.GameContent.Units
             if (IsInit == false) return;
 
             SpriteEffects effects = getSpriteShaderEffects(shaderSet);
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
 
             // all rectangles should do the scaling from world coordinates to screen coordinates
             Rectangle rect = _screenManager.GetScaledRectangle(x, y, MapTile.TILE_WIDTH_PX, MapTile.TILE_HEIGHT_PX);
 
             //TibzLog.Debug("Scaled xPos: {0}, yPos: {1}" , tileRect.X, tileRect.Y);
             // Texture2D currentTexture;
+
+            if (isTurnOver) {
+                //apply shader
+                TurnEndedEffect.CurrentTechnique.Passes[0].Apply();
+            }
 
             spriteBatch.Draw(
                 sprite, rect, null, Color.White, 0, new Vector2(0, 0),

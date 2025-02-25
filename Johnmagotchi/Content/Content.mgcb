@@ -197,6 +197,18 @@
 /processorParam:TextureFormat=Color
 /build:Map-UI/unit-display.png
 
+#begin Shaders/Tiles/AttackTileShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Tiles/AttackTileShader.fx
+
+#begin Shaders/Units/UnitTurnEnded_S.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Units/UnitTurnEnded_S.fx
+
 #begin Tiles/Grass/grass-1.png
 /importer:TextureImporter
 /processor:TextureProcessor

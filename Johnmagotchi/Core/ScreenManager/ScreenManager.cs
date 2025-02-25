@@ -32,9 +32,10 @@ namespace TibzGame.Core.ScreenManager
         public static readonly int BASE_ZOOM_LEVEL = 100;
 
         public int CURRRENT_ZOOM_LEVEL = 100; // bigger number zooms out more.
-
         private int SCALED_PIXELS_HEIGHT;//= 360 * 100; // 360
         private int SCALED_PIXELS_WIDTH;// = 640 * 100;
+
+        private int currentUnitId = 0; // this is internal
     
         public ScreenManager(Game game, ref GraphicsDeviceManager gfxRef, ref ContentManager contentManagerRef, ref InputManager inputManager)
             : base(game)
@@ -136,6 +137,7 @@ namespace TibzGame.Core.ScreenManager
             newScreen.ScreenManager = this;
             newScreen.Init();
  
+            this.inputs.ClearAllInputs(); // ingore the rest of the inputs on the frame where a screen is added
            
         }
         public void removeTopScreens(int screenCount) 
@@ -207,6 +209,11 @@ namespace TibzGame.Core.ScreenManager
             SCALED_PIXELS_HEIGHT = BASE_WORLD_UNIT_HEIGHT * CURRRENT_ZOOM_LEVEL; // 360
             SCALED_PIXELS_WIDTH = Convert.ToInt32(SCALED_PIXELS_HEIGHT * heightWidthRatio);
             TibzLog.Debug("Scaled Height: {0}, Scaled Width {1}", SCALED_PIXELS_HEIGHT, SCALED_PIXELS_WIDTH);
+        }
+
+        public int getUnitId() 
+        {
+           return this.currentUnitId++;
         }
     }
 }
