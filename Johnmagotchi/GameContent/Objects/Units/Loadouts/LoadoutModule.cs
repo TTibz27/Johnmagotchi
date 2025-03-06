@@ -16,15 +16,7 @@ namespace Johnmagotchi.GameContent.Objects.Units.Loadouts
             PASSIVE_SUPPORT,
             STAT_BOOST,
             BATTLE_EFFECT
-        }
-        enum ModuleColor
-        {
-            RED,
-            BLUE,
-            YELLOW,
-            GREEN,
-            PURPLE
-        }
+        }  
 
         public enum ModuleShape {
         SINGLE,

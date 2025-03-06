@@ -192,36 +192,7 @@ namespace Johnmagotchi.GameContent.Objects.Maps
             for (int i = selectedUnit.DirectAttackRangeMin; i <= selectedUnit.DirectAttackRangeMax; i++) {            
                 getCircleRange(ref list, i);
             }
-           
-            //if (selectedUnit.DirectAttackRange > 0) //1
-            //{
-            //    addTileIfInBounds(ref list, x - 1, y); // all 4 adjecent squares
-            //    addTileIfInBounds(ref list, x + 1, y);
-            //    addTileIfInBounds(ref list, x, y - 1);
-            //    addTileIfInBounds(ref list, x, y + 1);
-            //}
-            //if (selectedUnit.DirectAttackRange > 1) //2
-            //{
-            //    addTileIfInBounds(ref list, x, y + 2); // UU
-            //    addTileIfInBounds(ref list, x + 1, y + 1); // ru
-
-            //    addTileIfInBounds(ref list, x + 2, y); // rr
-            //    addTileIfInBounds(ref list, x + 1, y - 1); // rd
-
-            //    addTileIfInBounds(ref list, x, y - 2); // DD   
-            //    addTileIfInBounds(ref list, x - 1, y - 1); // ld
-
-            //    addTileIfInBounds(ref list, x - 2, y); // ll
-            //    addTileIfInBounds(ref list, x - 1, y + 1); // lu                  
-
-            //}
-            //if (selectedUnit.DirectAttackRange > 2) //3
-            //{ 
-            
-            //}
-                //add valid attack squares to the  list
-              // list.Add(new Tuple<int, int>(x, y));
-
+                
         }
 
         //gets one ring of an attack range at a time

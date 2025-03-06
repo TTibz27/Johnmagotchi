@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Johnmagotchi.GameContent.Objects.Units.BattleObjects
 {
-    internal class SkillObj
+    public class SkillObj
     {
     }
 }

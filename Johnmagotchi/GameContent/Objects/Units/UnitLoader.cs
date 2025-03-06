@@ -6,6 +6,7 @@ using Johnmagotchi.Core.tools;
 using System.Collections;
 using System.Net.Http.Headers;
 using static Johnmagotchi.GameContent.Units.UnitStatBlock;
+using Johnmagotchi.GameContent.Objects.Units.PlayerClasses;
 
 namespace Johnmagotchi.GameContent.Units
 {
@@ -38,7 +39,7 @@ namespace Johnmagotchi.GameContent.Units
         public static List<UnitObject> LoadBaseUnits(){
             List<UnitObject> unitList = new List<UnitObject>();
             System.Console.WriteLine("PATH: {0}", Directory.GetCurrentDirectory());
-            var path = "..\\..\\..\\Data\\BaseUnitData.csv";
+            var path = "..\\..\\..\\Data\\BattleObjects\\UnitDefinitions.csv";
             List<string> listA = new List<string>();
             List<string> listB = new List<string>();
             System.Console.WriteLine("path: {0} ", path);
@@ -46,6 +47,7 @@ namespace Johnmagotchi.GameContent.Units
             // these let us resolve which column is which
             int IdIndex = -1;
             int NameIndex = -1;
+            int ClassIndex = -1;
             int isUniqueIndex = -1;
             int HealthIndex = -1;
             int AttackIndex = -1;
@@ -72,6 +74,7 @@ namespace Johnmagotchi.GameContent.Units
 
                             if (values[i].Trim() == "ID") { IdIndex = i; }
                             if (values[i].Trim() == "NAME") { NameIndex = i; }
+                            if (values[i].Trim() == "CLASS") { ClassIndex = i; }
                             if (values[i].Trim() == "IS_UNIQUE") { isUniqueIndex = i; }
                             if (values[i].Trim() == "HEALTH") { HealthIndex = i; }
                             if (values[i].Trim() == "ATTACK") { AttackIndex = i; }
@@ -88,6 +91,7 @@ namespace Johnmagotchi.GameContent.Units
                         UnitObject unit = new UnitObject();
                         unit.id = Int32.Parse(values[IdIndex]);
                         unit.name = values[NameIndex];
+                        unit.playerClassEnum = PlayerClass.GetClassFromShortHand(values[ClassIndex]);
                         unit.isUnique = ( values[isUniqueIndex].ToLower() == "true");
                         unit.stats.maxHealth = Int32.Parse(values[HealthIndex]);
                         unit.stats.attack = Int32.Parse(values[AttackIndex]);

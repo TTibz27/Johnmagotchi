@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Johnmagotchi.GameContent.Objects.Units.BattleObjects
+namespace Johnmagotchi.Data.BattleObjects
 {
-    public class SupportObj
+    class SkillDefinitions
     {
     }
 }

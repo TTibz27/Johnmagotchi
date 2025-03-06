@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace Johnmagotchi.GameContent.Objects.Units.Loadouts
 {
-    internal class UnitLoadout
+    public class UnitLoadout
     {
         // this class is going to be a summary of both the player's class and thier currently added loadout modules.
         // this should effectively be an API between the character's stats/ablities and the battle system.
-        PlayerClasses.PlayerClass PlayerClass;
-        List<LoadoutModule> Modules;
-        List<AttackObj> AvailableAttacks;
-        List<SupportObj> AvailableSupports;
-        List<SkillObj> ActiveSkills;
+       private PlayerClasses.PlayerClass  PlayerClassRef;
+       internal  List<LoadoutModule> Modules;
+       public List<AttackObj> AvailableAttacks;
+       public List<SupportObj> AvailableSupports;
+       public List<SkillObj> ActiveSkills;
      
-        
     }
 }

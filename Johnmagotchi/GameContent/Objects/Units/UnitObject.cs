@@ -3,6 +3,7 @@
 
 using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent.Objects;
+using Johnmagotchi.GameContent.Objects.Units.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using TibzGame.Core.ScreenManager;
+using static Johnmagotchi.GameContent.Objects.Units.PlayerClasses.PlayerClass;
 
 namespace Johnmagotchi.GameContent.Units
 {
@@ -21,19 +23,16 @@ namespace Johnmagotchi.GameContent.Units
         public UnitStatBlock stats { set; get; }
         public bool isUnique { set; get; }
         public UnitTeam team { set; get; }
-
-        // this needs to be expanded for attacks/ items eventually, does not need saved atm
-        public int DirectAttackRangeMin = 2;
-        public int DirectAttackRangeMax = 4;
-        public int IndirectAttackRangeMin;
-        public int IndirectAttackRangeMax;
-
-        // Stats for battle screens
+        public PlayerClassType playerClassEnum { get; set; }
+    
+     // Stats for battle screens
         public int CurrentHealth { set; get; }
         public bool isTurnOver { set; get; }
-        // public statusEnum sttatus {get;set;}
+     // public statusEnum status {get;set;}
         public int xPos { set; get; }
         public int yPos { set; get; }
+
+        private PlayerClass playerClassInstance;
 
     //drawing and state management
         public SpriteShaderSets shaderSet;
@@ -43,6 +42,13 @@ namespace Johnmagotchi.GameContent.Units
         private SpriteBatch spriteBatch;
         private ScreenManager _screenManager;
         private bool IsInit;
+
+    // DEBUG VARS 
+        // this needs to be expanded for attacks/ items eventually, does not need saved atm
+        public int DirectAttackRangeMin = 2;
+        public int DirectAttackRangeMax = 4;
+        public int IndirectAttackRangeMin;
+        public int IndirectAttackRangeMax;
 
 
         public enum UnitTeam
@@ -63,6 +69,7 @@ namespace Johnmagotchi.GameContent.Units
             xPos = 0;
             yPos = 0;
             stats = new UnitStatBlock();
+        //    playerClassInstance = new PlayerClass(playerClassEnum);
 
         }
         public UnitObject(int x, int y){
@@ -70,7 +77,8 @@ namespace Johnmagotchi.GameContent.Units
             xPos = x;
             yPos = y;
             stats = new UnitStatBlock();
-           
+        //    playerClassInstance = new PlayerClass(playerClassEnum);
+
         }
 
         public UnitObject(UnitObject template) {
@@ -78,6 +86,7 @@ namespace Johnmagotchi.GameContent.Units
             CopyFromTemplate(template);
             CurrentHealth = stats.maxHealth;
             isTurnOver = false;
+            playerClassInstance = new PlayerClass(playerClassEnum);
 
         }
 
@@ -147,6 +156,7 @@ namespace Johnmagotchi.GameContent.Units
             this.xPos = template.xPos;
             this.yPos = template.yPos;
             this.isUnique = template.isUnique;
+            this.playerClassEnum = template.playerClassEnum;
            
             //this.sprite = template.sprite;
         }
@@ -183,11 +193,6 @@ namespace Johnmagotchi.GameContent.Units
         }
         public string getSpriteTexturePath()
         {
-
-
-           // return "Units/unit-test";
-
-            // this is placeholder till we get more graphics
             if (team == UnitTeam.PLAYER)
             {
                 return "Units/unit-test";
@@ -200,31 +205,7 @@ namespace Johnmagotchi.GameContent.Units
             {
                 return "Units/unit-test-npc";
             }
-
             return "Units/unit-test";
-
-            // shader sets should also be handled, but probably not here.
-
-            // TODO - This is how it should look when its done, grab srite by ID and add color for shaders via the enum
-
-            //switch (id) { 
-            //case 0:
-            //    return "Units/unit-test";
-            //case 1:
-            //    return "Units/unit-test-enemy";
-            //  case 2:
-            //    return "Units/unit-test-npc";
-            ////case 3:
-            ////    return "";
-            ////case 4:
-            ////    return "";
-            ////case 5:
-            ////    return "";
-            ////case 6:
-            ////    return "";
-            //default:
-            //    return "Units/unit-test";
-
         }
     }
 }
