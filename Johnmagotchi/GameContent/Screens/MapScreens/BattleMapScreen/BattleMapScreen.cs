@@ -1,4 +1,5 @@
 using Johnmagotchi.Core.tools;
+using Johnmagotchi.GameContent.Logic;
 using Johnmagotchi.GameContent.Objects;
 using Johnmagotchi.GameContent.Objects.Maps;
 using Johnmagotchi.GameContent.Screens.Menu.BattleMap;
@@ -6,6 +7,7 @@ using Johnmagotchi.GameContent.Units;
 using Johnmagotchi.Screen.BattleMapScreens;
 using System;
 using System.Collections.Generic;
+using TibzGame.Core.ScreenManager;
 
 namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
 {
@@ -19,6 +21,7 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
         }
 
         UnitObject selectedToMoveUnit;
+        UnitObject attackedUnit;
         private Tuple<int, int> originalLocation;
         private List<Tuple<int, int>> validMoves;
         private List<Tuple<int, int>> validAttacks;
@@ -87,16 +90,15 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
                                 CurrentMap.moveUnit(this.selectedToMoveUnit, cursorIndexX, cursorIndexY);
 
                                 ShowDirectAttackHighlights();
-                                // This menu calls: 
+                                // This menu directly calls: 
                                 //AfterMoveWait(), AfterMoveAttack(), AfterMoveWait()
+                                TibzLog.Debug(selectedToMoveUnit.UnitLoadout.AvailableAttacks);
                                 screenManager.addScreen(
                                   new AfterMovementMenu(
                                   this,
                                   MapTile.TILE_WIDTH_PX * cursorIndexX + scrollOffsetX,
                                    MapTile.TILE_HEIGHT_PX * cursorIndexY + scrollOffsetY,
                                   CursorQuadrant, true));
-
-
 
                             }
                             else
@@ -239,8 +241,22 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
         {
             ClearDirectAttackHighlights();
             finishMovement();
+            MapScreens.BattleMapScreen.BattlePreviewScreen.confirmCallback attackPreviewCallback = delegate (bool confirmed) { AttackPreviewConfirmed(confirmed); };
+            screenManager.addScreen(new MapScreens.BattleMapScreen.BattlePreviewScreen(ref attackPreviewCallback) );
 
         }
+
+        public void AttackPreviewConfirmed(bool isConfirmed) {
+            if (isConfirmed)
+            {
+             //   BattleLogic.RunBattle(selectedToMoveUnit,attackedUnit, selectedAttack, defenderAttack);
+                BattleLogic.RunBattle(ref selectedToMoveUnit, ref attackedUnit, null, null);
+                screenManager.addScreen(new MapScreens.BattleMapScreen.BattleAnimationScreen());
+            }
+         
+        }
+
+
         public void AfterMoveItem()
         {
             ClearDirectAttackHighlights();

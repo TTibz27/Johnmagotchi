@@ -8,6 +8,8 @@ using Microsoft.VisualBasic;
 using static System.Net.Mime.MediaTypeNames;
 using System.IO;
 using System;
+using Johnmagotchi.GameContent.Objects.Units.Loadouts;
+using Johnmagotchi.GameContent.Objects.Units.BattleObjects;
 
 namespace Johnmagotchi.Screen.BattleMapScreens
 {
@@ -31,6 +33,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
         private EditorToolType CurrentTool;
         private MapEditorInfoText InfoText;
         public List<UnitObject> AvailableUnits;
+        public List<UnitLoadout> AvailableLoadouts;
         private UnitFactionType UnitFaction; 
 
 
@@ -52,6 +55,9 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             InfoText.Init(screenManager);
             selectedTileType = TileType.GRASS;         
             AvailableUnits = UnitLoader.LoadBaseUnits();
+            
+
+
             selectedUnitIndex = 0;
             UnitFaction = UnitFactionType.PLAYER;
             foreach (UnitObject unit in AvailableUnits) {

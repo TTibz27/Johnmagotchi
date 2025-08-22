@@ -1,0 +1,2 @@
+﻿ID,SupportName,SupportTarget,SupportType,Value,Description
+1,Heal,ALLY,HEAL,10, Heals damage to ally unit

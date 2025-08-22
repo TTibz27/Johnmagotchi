@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Johnmagotchi.GameContent.Objects.Units.Loadouts
 {
-    internal class LoadoutModule
+    public class LoadoutModule
     {
         // This is going to be each little square module in the character customizer
 

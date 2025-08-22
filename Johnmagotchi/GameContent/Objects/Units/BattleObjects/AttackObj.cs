@@ -3,23 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Johnmagotchi.Data.BattleObjects.AttackDefines;
 
 namespace Johnmagotchi.GameContent.Objects.Units.BattleObjects
 {
     public class AttackObj
     {
-        public enum AttackTypeEnum { 
-            DIRECT = 0,
-            INDIRECT = 1
-        }
-
-        public enum SpecialAttackPropertiesEnum { 
-            NONE = 0,
-            BRAVE = 1,
-            POISON = 2,
-            KILLER = 3,
-            ARMOR_BANE = 4 
-        }
 
         public int ID;
         public string AttackName;

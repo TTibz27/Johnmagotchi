@@ -3,6 +3,7 @@
 
 using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent.Objects;
+using Johnmagotchi.GameContent.Objects.Units.Loadouts;
 using Johnmagotchi.GameContent.Objects.Units.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,12 +28,17 @@ namespace Johnmagotchi.GameContent.Units
     
      // Stats for battle screens
         public int CurrentHealth { set; get; }
+        public int CurrentShieldCount { set; get; }
+
         public bool isTurnOver { set; get; }
      // public statusEnum status {get;set;}
         public int xPos { set; get; }
         public int yPos { set; get; }
 
         private PlayerClass playerClassInstance;
+        public UnitLoadout UnitLoadout { get; set; }
+
+ 
 
     //drawing and state management
         public SpriteShaderSets shaderSet;
@@ -69,15 +75,7 @@ namespace Johnmagotchi.GameContent.Units
             xPos = 0;
             yPos = 0;
             stats = new UnitStatBlock();
-        //    playerClassInstance = new PlayerClass(playerClassEnum);
-
-        }
-        public UnitObject(int x, int y){
-            IsInit = false;
-            xPos = x;
-            yPos = y;
-            stats = new UnitStatBlock();
-        //    playerClassInstance = new PlayerClass(playerClassEnum);
+            //    playerClassInstance = new PlayerClass(playerClassEnum);
 
         }
 
@@ -85,8 +83,10 @@ namespace Johnmagotchi.GameContent.Units
             IsInit = false;
             CopyFromTemplate(template);
             CurrentHealth = stats.maxHealth;
+            CurrentShieldCount = 0;
             isTurnOver = false;
             playerClassInstance = new PlayerClass(playerClassEnum);
+            UnitLoadout = new UnitLoadout();
 
         }
 
@@ -107,6 +107,7 @@ namespace Johnmagotchi.GameContent.Units
            UnitObject temp = JsonSerializer.Deserialize<UnitObject>(data);
             CopyFromTemplate(temp); // get base stats
             CurrentHealth = temp.CurrentHealth;// Update current stats
+            CurrentShieldCount = 0;
             isTurnOver = temp.isTurnOver;
             TibzLog.Debug("HP on deserialized: " + temp.CurrentHealth);
             return ;

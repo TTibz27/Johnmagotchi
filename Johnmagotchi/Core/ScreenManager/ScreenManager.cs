@@ -6,6 +6,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using Johnmagotchi.Core.tools;
 using Johnmagotchi.Data;
+using Johnmagotchi.GameContent.Objects.Units.BattleObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,6 +24,7 @@ namespace TibzGame.Core.ScreenManager
         public GameScreen[] newScreenBuffer;
         public int removeScreenCount;
         public GlobalData gameData;
+       
 
 
 
@@ -40,6 +42,7 @@ namespace TibzGame.Core.ScreenManager
         public ScreenManager(Game game, ref GraphicsDeviceManager gfxRef, ref ContentManager contentManagerRef, ref InputManager inputManager)
             : base(game)
         {         
+      
             gfxDevRef = gfxRef;
             contentRef = contentManagerRef;
             inputs = inputManager;
@@ -49,7 +52,9 @@ namespace TibzGame.Core.ScreenManager
             removeScreenCount = 0;
             gameData  = new GlobalData(this);// todo = this would be where we load in existing save game data
 
-
+            // Initialize game global values
+            TibzLog.Debug("INIT BATTLE OBJECTS");
+            BattleObjectManager.LoadBattleObjects();
         }
         protected override void LoadContent()
         {
@@ -62,6 +67,8 @@ namespace TibzGame.Core.ScreenManager
         }
         public override void Update(GameTime gameTime)
         {
+
+
             // Update Screens
             base.Update(gameTime);
             bool updateBreak = false;

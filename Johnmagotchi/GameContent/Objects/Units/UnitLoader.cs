@@ -35,7 +35,6 @@ namespace Johnmagotchi.GameContent.Units
             //}
             return listA;
         }
-
         public static List<UnitObject> LoadBaseUnits(){
             List<UnitObject> unitList = new List<UnitObject>();
             System.Console.WriteLine("PATH: {0}", Directory.GetCurrentDirectory());

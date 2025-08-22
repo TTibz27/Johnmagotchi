@@ -95,7 +95,8 @@ namespace Johnmagotchi.GameContent.Objects.UI
             DrawText(posX, posY, HighlightedUnit.playerClassEnum.ToString());
             posX += (int)Math.Round(.05 * DISPLAY_WIDTH);
             posY += (15 * ScreenManager.BASE_ZOOM_LEVEL);
-            DrawHPText(posX, posY);
+            string DisplayString = HighlightedUnit.CurrentHealth + " HP  - " + HighlightedUnit.stats.maxHealth + " MAX";
+            DrawText(posX, posY, DisplayString);
         }
 
         public void DrawText(int x, int y ,string textString) {
@@ -126,41 +127,6 @@ namespace Johnmagotchi.GameContent.Objects.UI
             // the actual text
             position = new Vector2(x, y);
             spriteBatch.DrawString(kemco, textString, position, Color.Black, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
-
-            spriteBatch.End();
-        }
-        public void DrawHPText(int x, int y)
-        {
-            String DisplayString = "";
-
-            DisplayString += HighlightedUnit.CurrentHealth + " HP  - " + HighlightedUnit.stats.maxHealth + " MAX";
-            Vector2 textRotationOrigin = new Vector2(0, 0);
-            //Vector2 textRotationOrigin = kemco.MeasureString(HighlightedUnit.name);
-            //textRotationOrigin.X = textRotationOrigin.X / 2;
-
-            x = _screenManager.getScaledIntX(x);
-            y = _screenManager.getScaledIntX(y);
-            Vector2 position = new Vector2(x, y);
-
-            spriteBatch.Begin();
-
-            // the hackiest white outline of all time.
-            position = new Vector2(x + 2, y + 2);
-            spriteBatch.DrawString(kemco, DisplayString, position, Color.White, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
-            position = new Vector2(x - 2, y - 2);
-            spriteBatch.DrawString(kemco, DisplayString, position, Color.White, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
-            position = new Vector2(x + 2, y - 2);
-            spriteBatch.DrawString(kemco, DisplayString, position, Color.White, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
-            position = new Vector2(x - 2, y + 2);
-            spriteBatch.DrawString(kemco, DisplayString, position, Color.White, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
-            position = new Vector2(x + 2, y);
-            spriteBatch.DrawString(kemco, DisplayString, position, Color.White, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
-            position = new Vector2(x - 2, y);
-            spriteBatch.DrawString(kemco, DisplayString, position, Color.White, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
-
-            // the actual text
-            position = new Vector2(x, y);
-            spriteBatch.DrawString(kemco, DisplayString, position, Color.Black, 0, textRotationOrigin, 00.75f, SpriteEffects.None, 1.0f);
 
             spriteBatch.End();
         }
