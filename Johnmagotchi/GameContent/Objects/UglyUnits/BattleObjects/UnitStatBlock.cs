@@ -1,13 +1,13 @@
-
-
-namespace Johnmagotchi.GameContent.Units
+namespace Johnmagotchi.GameContent.Objects.Units.BattleObjects
 {
     public class UnitStatBlock{
-        public int maxHealth {get; set;}
-        public int attack {get; set;}
-        public int defense {get; set;}
-        public int speed {get; set;}
-        public int movement { get; set;}
+
+        public string Name { get; set; }
+        public int MaxHealth {get; set;}
+        public int Attack {get; set;}
+        public int Defense {get; set;}
+        public int Speed {get; set;}
+        public int Movement { get; set;}
 
         public MovementType movementType {get; set;}
 
@@ -21,17 +21,17 @@ namespace Johnmagotchi.GameContent.Units
         public void setMovementTypeFromFile(string inStr) {
             switch (inStr) {
                 case "FOOT":
-                    this.movementType = MovementType.FOOT; 
+                    movementType = MovementType.FOOT; 
                     return;
                 case "WHEELS":
-                    this.movementType= MovementType.WHEELS; 
+                    movementType= MovementType.WHEELS; 
                     return;
                 case "HORSE":
-                    this.movementType = MovementType.HORSE; 
+                    movementType = MovementType.HORSE; 
                     return;
                 case "FLYING":
                 case "FLYER":
-                    this.movementType = MovementType.FLYING;
+                    movementType = MovementType.FLYING;
                     return;
             }
 

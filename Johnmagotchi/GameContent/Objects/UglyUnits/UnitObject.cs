@@ -3,42 +3,53 @@
 
 using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent.Objects;
+using Johnmagotchi.GameContent.Objects.Units.BattleObjects;
 using Johnmagotchi.GameContent.Objects.Units.Loadouts;
-using Johnmagotchi.GameContent.Objects.Units.PlayerClasses;
+using Johnmagotchi.GameContent.Objects.Units.Loadouts.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using TibzGame.Core.ScreenManager;
-using static Johnmagotchi.GameContent.Objects.Units.PlayerClasses.PlayerClass;
+using static Johnmagotchi.GameContent.Objects.Units.Loadouts.PlayerClasses.PlayerClass;
 
 namespace Johnmagotchi.GameContent.Units
 {
+    /// <summary>
+    /// TO DO -- THIS SHOULD BE DELETED AFTER REFACTOR TO *BASE UNIT*
+    /// </summary>
     public class UnitObject{
         //defined stats
         public int internalID; // used to reference this object internally
         public int id { get; set; } // used to reference this unit as "Byleth" or "Marth" or whatever, you know?
         public string name { get; set; }
+
+
+        // REMOVING TEMPORARILY
         public UnitStatBlock stats { set; get; }
+        public UnitCurrentStatus currentStatus { get; set; }
         public bool isUnique { set; get; }
         public UnitTeam team { set; get; }
         public PlayerClassType playerClassEnum { get; set; }
     
      // Stats for battle screens
-        public int CurrentHealth { set; get; }
-        public int CurrentShieldCount { set; get; }
 
         public bool isTurnOver { set; get; }
      // public statusEnum status {get;set;}
         public int xPos { set; get; }
         public int yPos { set; get; }
 
-        private PlayerClass playerClassInstance;
+         PlayerClass playerClassInstance;
         public UnitLoadout UnitLoadout { get; set; }
 
+        public string serializedUnitLoadout { get; set;}
  
+// -------------------------------------------------------------------------------------------------------------
+
+
 
     //drawing and state management
         public SpriteShaderSets shaderSet;
@@ -75,6 +86,7 @@ namespace Johnmagotchi.GameContent.Units
             xPos = 0;
             yPos = 0;
             stats = new UnitStatBlock();
+            currentStatus = new UnitCurrentStatus(stats);
             //    playerClassInstance = new PlayerClass(playerClassEnum);
 
         }
@@ -82,34 +94,35 @@ namespace Johnmagotchi.GameContent.Units
         public UnitObject(UnitObject template) {
             IsInit = false;
             CopyFromTemplate(template);
-            CurrentHealth = stats.maxHealth;
-            CurrentShieldCount = 0;
             isTurnOver = false;
             playerClassInstance = new PlayerClass(playerClassEnum);
-            UnitLoadout = new UnitLoadout();
+            UnitLoadout = new UnitLoadout(playerClassEnum);
+            currentStatus = new UnitCurrentStatus(stats);
 
         }
 
+        
         public UnitObject(string serializedData)
         {
             IsInit = false;
             SetFromSerialized(serializedData);
+
+            //this.currentStatus = new UnitCurrentStatus(stats);
+            this.UnitLoadout = new UnitLoadout(playerClassEnum);
            
         }
 
         public string GetAsSerialized()
         {
-           return JsonSerializer.Serialize(this);
+           string json = JsonSerializer.Serialize(this);
+            return json;
         }
 
         public void SetFromSerialized(string data)
         {
-           UnitObject temp = JsonSerializer.Deserialize<UnitObject>(data);
+            UnitObject temp = JsonSerializer.Deserialize<UnitObject>(data);
             CopyFromTemplate(temp); // get base stats
-            CurrentHealth = temp.CurrentHealth;// Update current stats
-            CurrentShieldCount = 0;
             isTurnOver = temp.isTurnOver;
-            TibzLog.Debug("HP on deserialized: " + temp.CurrentHealth);
             return ;
         }
 
@@ -158,6 +171,7 @@ namespace Johnmagotchi.GameContent.Units
             this.yPos = template.yPos;
             this.isUnique = template.isUnique;
             this.playerClassEnum = template.playerClassEnum;
+            this.currentStatus = template.currentStatus;
            
             //this.sprite = template.sprite;
         }

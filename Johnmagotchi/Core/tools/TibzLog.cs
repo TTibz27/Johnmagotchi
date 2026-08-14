@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,20 +26,23 @@ namespace Johnmagotchi.Core.tools
         public static LogLevel ConsoleLogLevel { get; set; } = LogLevel.DEBUG;
         public static LogLevel FileOutLogLevel { get; set; } = LogLevel.DISABLED_LOG;
 
-        public static void Debug(string str)
+        public static void Debug(string str,[CallerFilePath] string filename = null, [CallerLineNumber] int line = 0)
         {
             if (ConsoleLogLevel <= 0)
             {
-                    if (isRunningInVS) System.Diagnostics.Debug.WriteLine(str);
-                    else System.Console.WriteLine(str);
+                if (isRunningInVS) System.Diagnostics.Debug.WriteLine("{0}:{1} - {2}", Path.GetFileName(filename), line, str);
+                else System.Console.WriteLine("{0}:{1} - {2}", Path.GetFileName(filename), line, str);
             }
         }
-        public static void Debug(object obj)
+        public static void Debug(object obj, [CallerFilePath] string filename = null, [CallerLineNumber] int line = 0)
         {
             if (ConsoleLogLevel <= 0)
             {
-                if (isRunningInVS) System.Diagnostics.Debug.WriteLine(obj);
-                else System.Console.WriteLine(obj);
+                if (isRunningInVS)
+                {
+                    System.Diagnostics.Debug.WriteLine("{0}:{1} - {2}", Path.GetFileName(filename), line, obj);
+                }
+                else System.Console.WriteLine("{0}:{1} - {2}", Path.GetFileName(filename), line, obj);
             }
         }
         public static void Debug(string str, string str2)

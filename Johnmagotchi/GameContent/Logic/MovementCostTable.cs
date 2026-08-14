@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Johnmagotchi.GameContent.Units.UnitStatBlock;
+using static Johnmagotchi.GameContent.Objects.Units.BattleObjects.UnitStatBlock;
 
-namespace Johnmagotchi.GameContent.Objects.Units
+namespace Johnmagotchi.GameContent.Logic
 {
     public static class MovementCostTable
     {

@@ -5,8 +5,8 @@ using System.Diagnostics;
 using Johnmagotchi.Core.tools;
 using System.Collections;
 using System.Net.Http.Headers;
-using static Johnmagotchi.GameContent.Units.UnitStatBlock;
-using Johnmagotchi.GameContent.Objects.Units.PlayerClasses;
+using static Johnmagotchi.GameContent.Objects.Units.BattleObjects.UnitStatBlock;
+using Johnmagotchi.GameContent.Objects.Units.Loadouts.PlayerClasses;
 
 namespace Johnmagotchi.GameContent.Units
 {
@@ -92,11 +92,11 @@ namespace Johnmagotchi.GameContent.Units
                         unit.name = values[NameIndex];
                         unit.playerClassEnum = PlayerClass.GetClassFromShortHand(values[ClassIndex]);
                         unit.isUnique = ( values[isUniqueIndex].ToLower() == "true");
-                        unit.stats.maxHealth = Int32.Parse(values[HealthIndex]);
-                        unit.stats.attack = Int32.Parse(values[AttackIndex]);
-                        unit.stats.defense = Int32.Parse(values[DefenseIndex]);
-                        unit.stats.speed = Int32.Parse(values[SpeedIndex]);
-                        unit.stats.movement = Int32.Parse(values[MovementIndex]);
+                        unit.stats.MaxHealth = Int32.Parse(values[HealthIndex]);
+                        unit.stats.Attack = Int32.Parse(values[AttackIndex]);
+                        unit.stats.Defense = Int32.Parse(values[DefenseIndex]);
+                        unit.stats.Speed = Int32.Parse(values[SpeedIndex]);
+                        unit.stats.Movement = Int32.Parse(values[MovementIndex]);
                         unit.stats.setMovementTypeFromFile(values[MovementTypeIndex]);
 
 

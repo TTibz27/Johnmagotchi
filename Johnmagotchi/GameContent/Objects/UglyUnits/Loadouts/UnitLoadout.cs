@@ -1,9 +1,13 @@
-﻿using Johnmagotchi.GameContent.Objects.Units.BattleObjects;
+﻿using Johnmagotchi.Core.tools;
+using Johnmagotchi.GameContent.Objects.Units.BattleObjects;
+using Johnmagotchi.GameContent.Objects.Units.Loadouts.PlayerClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using static Johnmagotchi.GameContent.Objects.Units.Loadouts.PlayerClasses.PlayerClass;
 
 namespace Johnmagotchi.GameContent.Objects.Units.Loadouts
 {
@@ -18,7 +22,7 @@ namespace Johnmagotchi.GameContent.Objects.Units.Loadouts
         public string AvailaibeSupportIDsCSV { get; set; } // csv list of all supports from class + Modules
         public string ActiveSkillsIDsCSV { get; set; } // csv list of all Skills from class + modules
 
-        public PlayerClasses.PlayerClass PlayerClassRef;
+        public PlayerClass PlayerClass;
 
        // These get instatiated from the csv save of the loadout
        public List<LoadoutModule> Modules; 
@@ -26,12 +30,34 @@ namespace Johnmagotchi.GameContent.Objects.Units.Loadouts
        public List<SupportObj> AvailableSupports;
        public List<SkillObj> ActiveSkills;
 
-       public UnitLoadout() {
+       public UnitLoadout(PlayerClassType pclass) {
+            PlayerClass = new PlayerClass(pclass);
             AvailableAttacks = new List<AttackObj>();
             AvailableSupports = new List<SupportObj>();
             ActiveSkills = new List<SkillObj>();
-       } 
+            AvailableAttacks.Concat(PlayerClass.ClassAttacks);
+            AvailableSupports.Concat(PlayerClass.ClassSupports);
+            ActiveSkills.Concat(PlayerClass.ClassSkills);
 
+            //TODO - get from module
+            
+       }
+        // This Constructor is used when deserializing a unit
+        [JsonConstructor]
+        public UnitLoadout(
+            int playerClassID,
+            string ModuleIDsCSV,
+            string AvailibleAttackIDsCSV,
+            string AvailaibeSupportIDsCSV,
+            string ActiveSkillsIDsCSV
+            ) {
+                this.playerClassID = playerClassID;
+                this.ModuleIDsCSV = ModuleIDsCSV;
+                this.AvailibleAttackIDsCSV = AvailibleAttackIDsCSV;
+                this.AvailaibeSupportIDsCSV = AvailaibeSupportIDsCSV;
+                this.ActiveSkillsIDsCSV = ActiveSkillsIDsCSV;
+              //  this.loadAllFromCSV();
+        }
 
         public void loadAllFromCSV() {
 
@@ -67,6 +93,8 @@ namespace Johnmagotchi.GameContent.Objects.Units.Loadouts
                     }
                 }
             }
+            TibzLog.Debug("Loadout initialized");
+            TibzLog.Debug(AvailableAttacks);
 
         }
         public void saveAllToCSV() {

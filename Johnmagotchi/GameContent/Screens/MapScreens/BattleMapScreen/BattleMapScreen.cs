@@ -60,6 +60,7 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
 
 
                 UnitObject newSelectedUnit = CurrentMap.getUnitAtLocation(cursorIndexX, cursorIndexY);
+                TibzLog.Debug(newSelectedUnit.UnitLoadout.AvailableAttacks);
                 if (newSelectedUnit != null && newSelectedUnit.isTurnOver == false && selectedToMoveUnit == null)
                 {
                     selectedToMoveUnit = newSelectedUnit;
@@ -171,7 +172,7 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
             int x = coords.Item1;
             int y = coords.Item2;
 
-            int range = unit.stats.movement;
+            int range = unit.stats.Movement;
 
             // tree traversal time
             TibzLog.Debug(" - BM screen - ");
@@ -187,7 +188,7 @@ namespace Johnmagotchi.GameContent.Screens.BattleMapScreens.BattleMapScreen
             List<Tuple<int, int>> validTiles = new List<Tuple<int, int>>();
             int x = coords.Item1;
             int y = coords.Item2;
-            int range = unit.stats.movement;
+            int range = unit.stats.Movement;
             MapMovementNode rootNode = new MapMovementNode(unit, CurrentMap, range, x, y);
             rootNode.getDirectAttackLocations(MapMovementNode.ParentNodeLocation.ROOT, ref validTiles);
 

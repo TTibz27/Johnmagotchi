@@ -1,11 +1,10 @@
 ﻿using Johnmagotchi.Core.tools;
 using Johnmagotchi.GameContent.Objects.Units.BattleObjects;
 using Johnmagotchi.GameContent.Objects.Units.Loadouts;
-using Johnmagotchi.GameContent.Units;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Johnmagotchi.GameContent.Objects.Units.PlayerClasses
+namespace Johnmagotchi.GameContent.Objects.Units.Loadouts.PlayerClasses
 {
     public class PlayerClass
     {
@@ -23,7 +22,6 @@ namespace Johnmagotchi.GameContent.Objects.Units.PlayerClasses
         public enum PlayerClassType
         {
             CL_COMMONER = 0,
-
             RR_KNIGHT, //Red 1
             RB_MERC,
             RY_GRAPPLER,
@@ -49,11 +47,11 @@ namespace Johnmagotchi.GameContent.Objects.Units.PlayerClasses
         ModuleColor PrimaryColor;
         ModuleColor SecondaryColor;
         
-        List<AttackObj> AvailableAttacks; // default + loadout 
-        List<SupportObj> AvailableSupports;  // default + loadout 
-        List<SkillObj> ActiveSkills;  // default + loadout 
+        public List<AttackObj> ClassAttacks; // default for the class
+        public List<SupportObj> ClassSupports;  // default
+        public List<SkillObj> ClassSkills;  // default
 
-        UnitStatBlock StatBoosts; // This is a unit stat block that will be added? to the base stats of a unit.
+        public UnitStatBlock StatBoosts; // This is a unit stat block that will be added? to the base stats of a unit.
 
         List<int> defaultAttackIds;
         List<int> defaultSupportIds;
@@ -64,9 +62,9 @@ namespace Johnmagotchi.GameContent.Objects.Units.PlayerClasses
         public PlayerClass(PlayerClassType type) {
             ClassType = type;
 
-            AvailableAttacks = new List<AttackObj>();
-            AvailableSupports = new List<SupportObj>();
-            ActiveSkills = new List<SkillObj>();
+            ClassAttacks = new List<AttackObj>();
+            ClassSupports = new List<SupportObj>();
+            ClassSkills = new List<SkillObj>();
             StatBoosts = new UnitStatBlock();
 
             InitClassSpecificFields();
@@ -74,13 +72,13 @@ namespace Johnmagotchi.GameContent.Objects.Units.PlayerClasses
         }
         public void SetAndInitLoadout( UnitLoadout loadout) { 
             UnitLoadout = loadout;
-            AvailableAttacks.Clear();
-            AvailableSupports.Clear();
-            ActiveSkills.Clear();
-            this.InitClassSpecificFields(); // grab attacks again
-            AvailableAttacks = AvailableAttacks.Concat(loadout.AvailableAttacks).ToList();
-            AvailableSupports = AvailableSupports.Concat(loadout.AvailableSupports).ToList();
-            ActiveSkills = ActiveSkills.Concat(loadout.ActiveSkills).ToList();         
+            ClassAttacks.Clear();
+            ClassSupports.Clear();
+            ClassSkills.Clear();
+            InitClassSpecificFields(); // grab attacks again
+            ClassAttacks = ClassAttacks.Concat(loadout.AvailableAttacks).ToList();
+            ClassSupports = ClassSupports.Concat(loadout.AvailableSupports).ToList();
+            ClassSkills = ClassSkills.Concat(loadout.ActiveSkills).ToList();         
         }
 
         private void InitClassSpecificFields() {

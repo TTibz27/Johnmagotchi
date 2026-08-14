@@ -59,7 +59,7 @@ namespace Johnmagotchi.GameContent.Logic
             for (int i = 0; i < hitcount; i++) {
             
                 int hitRoll = BattleLogic.Random.Next(100) + 1; // random int 1 - 100
-                int hitThreshold = attack.BaseAccuracy + Attacker.stats.speed - Defender.stats.speed;
+                int hitThreshold = attack.BaseAccuracy + Attacker.stats.Speed - Defender.stats.Speed;
 
                 // this should be adjusted, in FE games its usally something like......
                 // ATTACKER = Hit + (Skill × 2) + (Luck / 2) + (Support bonus)+(Weapon triangle advantage/ disadvantage) +(S level bonus) 
@@ -77,19 +77,19 @@ namespace Johnmagotchi.GameContent.Logic
                 else if (hitRoll >= critThreshold)   //Handle Crits
                 {
                   
-                    if (Defender.CurrentShieldCount > 1) Defender.CurrentShieldCount--; // as is, crits ignore shields but should still tick a shield down
-                    if (Defender.CurrentShieldCount < 0) Defender.CurrentShieldCount = 0;
+                    if (Defender.currentStatus.CurrentShieldCount > 1) Defender.currentStatus.CurrentShieldCount--; // as is, crits ignore shields but should still tick a shield down
+                    if (Defender.currentStatus.CurrentShieldCount < 0) Defender.currentStatus.CurrentShieldCount = 0;
                     int BaseDamage = CalculateDamage(Attacker,Defender,attack);
                     int TotalCritDamage = (int) Math.Ceiling (BaseDamage * CriticalMultiplier);
 
                     //apply Damage to defending unit, then add to result report
-                    Defender.CurrentHealth -= TotalCritDamage;
+                    Defender.currentStatus.CurrentHealth -= TotalCritDamage;
                     results.addResult(BattleResults.resultType.CRITICAL, TotalCritDamage, isCounter);
 
                 }
-                else if (Defender.CurrentShieldCount > 1) // Shielded
+                else if (Defender.currentStatus.CurrentShieldCount > 1) // Shielded
                 {
-                    Defender.CurrentShieldCount--;
+                    Defender.currentStatus.CurrentShieldCount--;
                     results.addResult(BattleResults.resultType.SHIELDED,1, isCounter); // 1 siginfies 1 shield lost
                 }
                 else // normal attack
@@ -97,7 +97,7 @@ namespace Johnmagotchi.GameContent.Logic
                     int BaseDamage = CalculateDamage(Attacker, Defender, attack);
 
                     //Apply damage + report to animation handler
-                    Defender.CurrentHealth -= BaseDamage;
+                    Defender.currentStatus.CurrentHealth -= BaseDamage;
                     results.addResult(BattleResults.resultType.ATTACK, BaseDamage, isCounter);
                 }
             }
@@ -109,9 +109,9 @@ namespace Johnmagotchi.GameContent.Logic
             int damage = 0;
 
             damage += attack.BaseDamage;
-            damage += Attacker.stats.attack;
+            damage += Attacker.stats.Attack;
 
-            damage -= Defender.stats.defense;
+            damage -= Defender.stats.Defense;
 
 
             if (damage < 0) damage = 0;

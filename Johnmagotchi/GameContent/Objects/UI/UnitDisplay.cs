@@ -95,7 +95,7 @@ namespace Johnmagotchi.GameContent.Objects.UI
             DrawText(posX, posY, HighlightedUnit.playerClassEnum.ToString());
             posX += (int)Math.Round(.05 * DISPLAY_WIDTH);
             posY += (15 * ScreenManager.BASE_ZOOM_LEVEL);
-            string DisplayString = HighlightedUnit.CurrentHealth + " HP  - " + HighlightedUnit.stats.maxHealth + " MAX";
+            string DisplayString = HighlightedUnit.currentStatus.CurrentHealth + " HP  - " + HighlightedUnit.stats.MaxHealth + " MAX";
             DrawText(posX, posY, DisplayString);
         }
 

@@ -18,6 +18,8 @@ namespace TibzGame.Core.Inputs
         public MouseInput mouseInput; 
 
         public Keys[] actionKeyMappings;
+
+        public bool isMouseMode = false;
         public InputManager() {
 
             menuInputs = new InputMapMenu();

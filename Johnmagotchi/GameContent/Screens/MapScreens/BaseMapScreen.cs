@@ -50,6 +50,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
 
         private bool IsNewMap = true;
 
+
         public abstract void ChildInit();
         public abstract void ChildUpdate();
         public abstract void ChildDraw();
@@ -146,76 +147,111 @@ namespace Johnmagotchi.Screen.BattleMapScreens
          // Updates
             UpdateCursorQuadrant(); // This doesnt need to be called every frame, but its easy. so.
 
-        //Check Button Presses
-            if (screenManager.inputs.editorInputs.navLeft.isJustPressed){
-              TickCursorLeft();
-            }
-            if (screenManager.inputs.editorInputs.navRight.isJustPressed){
-               TickCursorRight();
-            }
-            if (screenManager.inputs.editorInputs.navUp.isJustPressed){
-               TickCursorUp();
-            }
-            if (screenManager.inputs.editorInputs.navDown.isJustPressed){
-                TickCursorDown();
-            }
-            if(screenManager.inputs.editorInputs.saveButton.isJustPressed){
-                saveCurrentMap();
-            }
-            if(screenManager.inputs.editorInputs.loadButton.isJustPressed){
-                loadCurrentMap();
-            }
 
-
-         //Button Holds
-            if (screenManager.inputs.editorInputs.navLeft.heldTime > CURSOR_HOLD_FRAMES)
+            /// Keyboard / Controller controls
+            if (! screenManager.inputs.isMouseMode)
             {
-                IncrementScrollTimers();
-                if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
+
+                if (screenManager.inputs.mouseInput.leftClick.isJustReleased) {
+                    TibzLog.Debug(" Changed To Mouse Controls");
+                    screenManager.inputs.isMouseMode = true;
+                }
+                //Check Button Presses
+                if (screenManager.inputs.editorInputs.navLeft.isJustPressed)
                 {
-                    scrollTimer = 0;
                     TickCursorLeft();
                 }
-              
-            }
-            if (screenManager.inputs.editorInputs.navRight.heldTime > CURSOR_HOLD_FRAMES)
-            {
-                IncrementScrollTimers();
-                if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
+                if (screenManager.inputs.editorInputs.navRight.isJustPressed)
                 {
-                    scrollTimer = 0;
                     TickCursorRight();
                 }
-            }
-            if (screenManager.inputs.editorInputs.navUp.heldTime > CURSOR_HOLD_FRAMES)
-            {
-                IncrementScrollTimers();
-                if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
+                if (screenManager.inputs.editorInputs.navUp.isJustPressed)
+                {
+                    TickCursorUp();
+                }
+                if (screenManager.inputs.editorInputs.navDown.isJustPressed)
+                {
+                    TickCursorDown();
+                }
+                if (screenManager.inputs.editorInputs.saveButton.isJustPressed)
+                {
+                    saveCurrentMap();
+                }
+                if (screenManager.inputs.editorInputs.loadButton.isJustPressed)
+                {
+                    loadCurrentMap();
+                }
+
+
+                //Button Holds
+                if (screenManager.inputs.editorInputs.navLeft.heldTime > CURSOR_HOLD_FRAMES)
+                {
+                    IncrementScrollTimers();
+                    if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
+                    {
+                        scrollTimer = 0;
+                        TickCursorLeft();
+                    }
+
+                }
+                if (screenManager.inputs.editorInputs.navRight.heldTime > CURSOR_HOLD_FRAMES)
+                {
+                    IncrementScrollTimers();
+                    if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
+                    {
+                        scrollTimer = 0;
+                        TickCursorRight();
+                    }
+                }
+                if (screenManager.inputs.editorInputs.navUp.heldTime > CURSOR_HOLD_FRAMES)
+                {
+                    IncrementScrollTimers();
+                    if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
+                    {
+                        scrollTimer = 0;
+                        TickCursorUp();
+                    }
+                }
+                if (screenManager.inputs.editorInputs.navDown.heldTime > CURSOR_HOLD_FRAMES)
+                {
+                    IncrementScrollTimers();
+                    if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
+                    {
+                        scrollTimer = 0;
+                        TickCursorDown();
+                    }
+                }
+                if (ScreenManager.inputs.editorInputs.navLeft.isJustReleased || // reset scroll timers on release
+                ScreenManager.inputs.editorInputs.navRight.isJustReleased ||
+                ScreenManager.inputs.editorInputs.navUp.isJustReleased ||
+                ScreenManager.inputs.editorInputs.navDown.isJustReleased)
                 {
                     scrollTimer = 0;
-                   TickCursorUp();
+                    scrollTotalDuration = 0;
                 }
-            } 
-            if (screenManager.inputs.editorInputs.navDown.heldTime > CURSOR_HOLD_FRAMES)
-            {
-                IncrementScrollTimers();
-                if (scrollTimer > CURSOR_SCROLL_NEXT_INC_FRAMES)
-                {
-                    scrollTimer = 0;
-                  TickCursorDown();
-                }
-            }   
-            if (ScreenManager.inputs.editorInputs.navLeft.isJustReleased|| // reset scroll timers on release
-            ScreenManager.inputs.editorInputs.navRight.isJustReleased||
-            ScreenManager.inputs.editorInputs.navUp.isJustReleased||
-            ScreenManager.inputs.editorInputs.navDown.isJustReleased)
-            {
-                scrollTimer = 0;
-                scrollTotalDuration = 0;
             }
 
-        // update battle map
-            CurrentMap.Update();
+            else {
+                if (screenManager.inputs.editorInputs.confirm.isJustPressed)
+                {
+                    TibzLog.Debug(" Reverted to keyboard controls");
+                    screenManager.inputs.isMouseMode =  false;
+                }
+
+                UpdateCursorMouse();
+
+                if (screenManager.inputs.mouseInput.leftClick.isJustPressed)
+                {
+                    screenManager.inputs.editorInputs.confirm.isJustPressed = true;
+                }
+                if (screenManager.inputs.mouseInput.rightClick.isJustPressed)
+                { 
+                    screenManager.inputs.editorInputs.cancel.isJustPressed = true;
+                }
+            }
+
+                // update battle map 
+                CurrentMap.Update();
 
             // update unit display
             UnitDisplay.Update( CurrentMap.getUnitAtLocation(cursorIndexX, cursorIndexY));
@@ -382,6 +418,20 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                     CursorQuadrant = 4;
                 }
             }
+        }
+
+        private void UpdateCursorMouse() 
+        {
+            int x = screenManager.inputs.mouseInput.x; 
+            int y = screenManager.inputs.mouseInput.y;
+            //TibzLog.Debug("Mouse Pos: x - "+  x + " , y - " + y );
+
+            int xSelectedTileIndex =  x * ScreenManager.BASE_ZOOM_LEVEL / ( MapTile.TILE_WIDTH_PX * 2 );
+            int ySelectedTileIndex = y * ScreenManager.BASE_ZOOM_LEVEL / (MapTile.TILE_HEIGHT_PX * 2 );
+
+            cursorIndexX = xSelectedTileIndex;
+            cursorIndexY = ySelectedTileIndex;
+
         }
     }
 }

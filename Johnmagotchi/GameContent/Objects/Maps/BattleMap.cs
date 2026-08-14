@@ -247,6 +247,7 @@ namespace Johnmagotchi.GameContent.Objects
 
         }
         public void DeserializeUnitData() {
+            TibzLog.Debug("Deserializing unit data");
             List<UnitObject> OutPlayerUnits = new List<UnitObject>();
             List<UnitObject> OutEnemyUnits = new List<UnitObject>();
             List<UnitObject> OutNpcUnits = new List<UnitObject>();
@@ -257,6 +258,7 @@ namespace Johnmagotchi.GameContent.Objects
 
             foreach(string entry in players) {
                 UnitObject newUnit = new UnitObject(entry);
+                TibzLog.Debug(JsonSerializer.Serialize(newUnit));
                 OutPlayerUnits.Add(newUnit); // makes new instance from serialized string
                 newUnit.InitSprite(_screenManager, UnitObject.UnitTeam.PLAYER); 
             }

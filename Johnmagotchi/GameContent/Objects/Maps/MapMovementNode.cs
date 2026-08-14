@@ -1,5 +1,5 @@
 ﻿using Johnmagotchi.Core.tools;
-using Johnmagotchi.GameContent.Objects.Units;
+using Johnmagotchi.GameContent.Logic;
 using Johnmagotchi.GameContent.Units;
 using System;
 using System.Collections.Generic;

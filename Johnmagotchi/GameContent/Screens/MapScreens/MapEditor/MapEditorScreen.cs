@@ -62,7 +62,7 @@ namespace Johnmagotchi.Screen.BattleMapScreens
             UnitFaction = UnitFactionType.PLAYER;
             foreach (UnitObject unit in AvailableUnits) {
                 TibzLog.Debug(" Unit id: {0}, name: {1},  health: {2}, atk: {3}, def: {4}, spd {5}, unique: {6}, movementType {7} ",
-                    unit.id, unit.name, unit.stats.maxHealth, unit.stats.attack, unit.stats.defense,unit.stats.speed , unit.isUnique, unit.stats.movementType);
+                    unit.id, unit.name, unit.stats.MaxHealth, unit.stats.Attack, unit.stats.Defense,unit.stats.Speed , unit.isUnique, unit.stats.movementType);
             }
 
             if (AUTOLOAD_SLOT_0) { 
@@ -217,9 +217,10 @@ namespace Johnmagotchi.Screen.BattleMapScreens
                 //}
                 //close the file
                 sr.Close();
+                TibzLog.Debug("File Stream Closeds");
 
-              
-                
+
+
             }
             catch (Exception e)
             {
